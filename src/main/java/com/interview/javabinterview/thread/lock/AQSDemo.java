@@ -7,5 +7,6 @@ public class AQSDemo {
     public static void main(String[] args) {
         ReentrantLock reentrantLock = new ReentrantLock(false);
         reentrantLock.lock();
+
     }
 }
