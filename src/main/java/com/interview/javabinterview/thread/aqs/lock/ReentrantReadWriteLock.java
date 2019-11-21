@@ -526,6 +526,7 @@ public class ReentrantReadWriteLock implements ReadWriteLock, java.io.Serializab
         return UNSAFE.getLongVolatile(thread, TID_OFFSET);
     }
 
+
     private static final sun.misc.Unsafe UNSAFE;
     private static final long TID_OFFSET;
 
