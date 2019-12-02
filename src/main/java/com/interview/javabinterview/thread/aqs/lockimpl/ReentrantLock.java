@@ -8,16 +8,24 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 
+/**
+ * 可重入锁:
+ *      1.独占锁
+ *      2.state: 表示该所的可重入次数
+ */
 public class ReentrantLock implements Lock, java.io.Serializable {
     private static final long serialVersionUID = 7373984872572414699L;
-    
+
     private final Sync sync;
 
+    /**
+     * 内部类 ,继承 AQS.
+     */
     abstract static class Sync extends AbstractQueuedSynchronizer {
         private static final long serialVersionUID = -5179523762034025860L;
 
         abstract void lock();
-        
+
         final boolean nonfairTryAcquire(int acquires) {
             final Thread current = Thread.currentThread();
             int c = getState();
@@ -26,10 +34,9 @@ public class ReentrantLock implements Lock, java.io.Serializable {
                     setExclusiveOwnerThread(current);
                     return true;
                 }
-            }
-            else if (current == getExclusiveOwnerThread()) {
+            } else if (current == getExclusiveOwnerThread()) {
                 int nextc = c + acquires;
-                if (nextc < 0) // overflow
+                if (nextc < 0) // overflow  2^31-1 = 2147483647
                     throw new Error("Maximum lock count exceeded");
                 setState(nextc);
                 return true;
@@ -51,7 +58,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         }
 
         protected final boolean isHeldExclusively() {
-        
+
             return getExclusiveOwnerThread() == Thread.currentThread();
         }
 
@@ -70,17 +77,20 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         final boolean isLocked() {
             return getState() != 0;
         }
-        
+
         private void readObject(java.io.ObjectInputStream s)
                 throws java.io.IOException, ClassNotFoundException {
             s.defaultReadObject();
             setState(0); // reset to unlocked state
         }
     }
-    
+
+    /**
+     * 非公平锁
+     */
     static final class NonfairSync extends Sync {
         private static final long serialVersionUID = 7316153563782823691L;
-        
+
         final void lock() {
             if (compareAndSetState(0, 1))
                 setExclusiveOwnerThread(Thread.currentThread());
@@ -92,7 +102,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
             return nonfairTryAcquire(acquires);
         }
     }
-    
+
     static final class FairSync extends Sync {
         private static final long serialVersionUID = -3000897897090466540L;
 
@@ -104,13 +114,12 @@ public class ReentrantLock implements Lock, java.io.Serializable {
             final Thread current = Thread.currentThread();
             int c = getState();
             if (c == 0) {
-                if (!hasQueuedPredecessors() &&
-                        compareAndSetState(0, acquires)) {
+                //公平性策略
+                if (!hasQueuedPredecessors() && compareAndSetState(0, acquires)) {
                     setExclusiveOwnerThread(current);
                     return true;
                 }
-            }
-            else if (current == getExclusiveOwnerThread()) {
+            } else if (current == getExclusiveOwnerThread()) {
                 int nextc = c + acquires;
                 if (nextc < 0)
                     throw new Error("Maximum lock count exceeded");
@@ -121,6 +130,9 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         }
     }
 
+    /**
+     * 默认是非公平锁
+     */
     public ReentrantLock() {
         sync = new NonfairSync();
     }
@@ -140,7 +152,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     public boolean tryLock() {
         return sync.nonfairTryAcquire(1);
     }
-    
+
     public boolean tryLock(long timeout, TimeUnit unit)
             throws InterruptedException {
         return sync.tryAcquireNanos(1, unit.toNanos(timeout));
@@ -153,7 +165,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     public Condition newCondition() {
         return sync.newCondition();
     }
-    
+
     public int getHoldCount() {
         return sync.getHoldCount();
     }
@@ -189,13 +201,13 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     protected Collection<Thread> getQueuedThreads() {
         return sync.getQueuedThreads();
     }
-    
+
     public boolean hasWaiters(Condition condition) {
         if (condition == null)
             throw new NullPointerException();
         if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
             throw new IllegalArgumentException("not owner");
-        return sync.hasWaiters((AbstractQueuedSynchronizer.ConditionObject)condition);
+        return sync.hasWaiters((AbstractQueuedSynchronizer.ConditionObject) condition);
     }
 
     public int getWaitQueueLength(Condition condition) {
@@ -203,17 +215,17 @@ public class ReentrantLock implements Lock, java.io.Serializable {
             throw new NullPointerException();
         if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
             throw new IllegalArgumentException("not owner");
-        return sync.getWaitQueueLength((AbstractQueuedSynchronizer.ConditionObject)condition);
+        return sync.getWaitQueueLength((AbstractQueuedSynchronizer.ConditionObject) condition);
     }
-    
+
     protected Collection<Thread> getWaitingThreads(Condition condition) {
         if (condition == null)
             throw new NullPointerException();
         if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
             throw new IllegalArgumentException("not owner");
-        return sync.getWaitingThreads((AbstractQueuedSynchronizer.ConditionObject)condition);
+        return sync.getWaitingThreads((AbstractQueuedSynchronizer.ConditionObject) condition);
     }
-    
+
     public String toString() {
         Thread o = sync.getOwner();
         return super.toString() + ((o == null) ?

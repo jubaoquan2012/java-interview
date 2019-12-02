@@ -167,14 +167,15 @@ public abstract class AbstractQueuedSynchronizer
     }
 
     private void unparkSuccessor(Node node) {
-
         int ws = node.waitStatus;
-        if (ws < 0)
-            compareAndSetWaitStatus(node, ws, 0);
-
+        // 如果当前节点的状态小于0，将状态更新为0，重置一下
+        if (ws < 0) compareAndSetWaitStatus(node, ws, 0);
         Node s = node.next;
+        // 后继节点不存在或者后继节点的waitStatus大于0（也就是被取消的状态）
         if (s == null || s.waitStatus > 0) {
+            // 置后继节点为null，
             s = null;
+            // 若当前节点发生了取消操作，重新从尾部开始遍历，找到没有标记为取消的节点进行阻塞操作
             for (Node t = tail; t != null && t != node; t = t.prev)
                 if (t.waitStatus <= 0)
                     s = t;
@@ -239,16 +240,35 @@ public abstract class AbstractQueuedSynchronizer
         }
     }
 
+    /**
+     * https://www.jianshu.com/p/63588ebea397
+     * <p>
+     * 首先，这个方法的总目的: 要让pre结点的状态为SIGNAL，
+     * 这个状态的意思是:pre结点的下一个要被block或者已经是blocked了，
+     * pre结点（自己）在他自己释放锁的时候必须要做unpark操作来叫醒park的node（后面那个）。
+     * <p>
+     * <p>
+     * 这个函数是整个循环中处理信号状态的唯一方法。信号是什么？也就是我们在Node章节提到的waitStatus状态。
+     * waitStatus状态初始化的值是0。如代码中描述的，waitStatus只有前驱节点是SIGNAL状态才会将当前的线程阻塞住。
+     * 其他情况下，waitStatus为非正数时，就会将前驱节点的状态更新为SIGNAL。而状态为正数时，代表节点被取消了，
+     * 就会不断向前寻找，直到找到未被取消的节点。取消的节点通通会被垃圾回收机制处理掉。
+     */
     private static boolean shouldParkAfterFailedAcquire(Node pred, Node node) {
+        //1. 首先获取当前节点的pre结点的状态；
         int ws = pred.waitStatus;
+        // 只有SIGNAL状态才能阻塞线程
         if (ws == Node.SIGNAL)
             return true;
+        //pre结点的状态大于0，也就是CANCELLED，那么就要改pre指针，跳过这些cancelled的node，
+        // 直到找到一个不是cancelled的node作为新的pre结点。
         if (ws > 0) {
             do {
+                // 向队列的前驱节点找,一直到找到一个状态码小于0的,也就是非CANCEL状态的
                 node.prev = pred = pred.prev;
             } while (pred.waitStatus > 0);
             pred.next = node;
         } else {
+            // 如果前驱节点的状态是小于0的，CAS方式将前驱节点的状态更新为SIGNAL。同时不对线程阻塞
             compareAndSetWaitStatus(pred, ws, Node.SIGNAL);
         }
         return false;
@@ -258,9 +278,16 @@ public abstract class AbstractQueuedSynchronizer
         Thread.currentThread().interrupt();
     }
 
+    /**
+     * LockSupport.park对线程进行了阻塞，返回线程是否被中断的状态。
+     * LockSupport的细节不做解释，简单来说，它主要是用来解决Thread.suspend这种方法会产生死锁的问题，
+     * 同时能够对线程进行阻塞，核心是由native方法进行处理
+     *
+     * @return
+     */
     private final boolean parkAndCheckInterrupt() {
         LockSupport.park(this);
-        return Thread.interrupted();
+        return Thread.interrupted();//注意哦，这个方法如果刚刚是interrupt的，会返回true，然后清除当前线程interrupt的状态
     }
 
     final boolean acquireQueued(final Node node, int arg) {
@@ -268,15 +295,20 @@ public abstract class AbstractQueuedSynchronizer
         try {
             boolean interrupted = false;
             for (; ; ) {
-                final Node p = node.predecessor();//返回上一个节点
-                if (p == head && tryAcquire(arg)) {//如果当前节点的前一个节点是head 节点(说明当前节点已经是头节点了) ,并且获取资源成功
+                //获取当前节点的先驱节点
+                final Node p = node.predecessor();
+                /**
+                 * 如果当前节点的前一个节点是head 节点(说明当前节点已经是头节点了) ,并且获取资源成功
+                 * 这个if告诉我们，只有是你的node排队排到第二个了，就下一个就队头了，
+                 * 才能再次看能不能获得锁，就用我们重写的tryAcquire来获取锁
+                 */
+                if (p == head && tryAcquire(arg)) {
                     setHead(node);
                     p.next = null; // help GC
                     failed = false;
                     return interrupted;
                 }
-                if (shouldParkAfterFailedAcquire(p, node) &&
-                        parkAndCheckInterrupt())
+                if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt())
                     interrupted = true;
             }
         } finally {
@@ -469,6 +501,7 @@ public abstract class AbstractQueuedSynchronizer
      */
     public final void acquire(int arg) {
         /**
+         * https://www.cnblogs.com/wangshen31/p/10478129.html
          * tryAcquire（）尝试获取资源,
          *  成功直接返回
          *  失败:
@@ -500,7 +533,14 @@ public abstract class AbstractQueuedSynchronizer
     public final boolean release(int arg) {
         if (tryRelease(arg)) {
             Node h = head;
+            /**
+             * 若头节点存在，且头节点的waitStatus状态是非0，也就说明AQS不是初始化阶段
+             *
+             * waitStatus状态是0，代表这个节点的状态还未更新，因此AQS没有将后继节点进行阻塞，
+             * 这个时候就不能去做unpark的操作。
+             */
             if (h != null && h.waitStatus != 0)
+                //将后继节点的线程唤醒
                 unparkSuccessor(h);
             return true;
         }
@@ -593,8 +633,16 @@ public abstract class AbstractQueuedSynchronizer
         Node t = tail; // Read fields in reverse initialization order
         Node h = head;
         Node s;
-        return h != t &&
-                ((s = h.next) == null || s.thread != Thread.currentThread());
+        /**
+         * 三种情况: 直接返回 false:
+         * 1.h == t :当前队列为空,直接返回 false
+         * 2. h != t && s == null :
+         *      说明有一个元素将要作为AQS 的第一个节点入队列(就是addWaiter()方法中: enq()中:
+         *        首先创建一个哨兵节点,然后将第一个元素,插入到哨兵节点后面. )
+         * 3. h != t && s != null 和 s.thread != Thread.currentThread() :
+         *      说明队列里的第一个元素表示当前线程
+         */
+        return h != t && ((s = h.next) == null || s.thread != Thread.currentThread());
     }
 
 

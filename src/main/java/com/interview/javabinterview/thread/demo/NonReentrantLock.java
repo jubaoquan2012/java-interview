@@ -1,4 +1,4 @@
-package com.interview.javabinterview.thread.aqs.demo;
+package com.interview.javabinterview.thread.demo;
 
 import com.interview.javabinterview.thread.aqs.AbstractQueuedSynchronizer;
 import com.interview.javabinterview.thread.aqs.Condition;
