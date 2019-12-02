@@ -1,4 +1,4 @@
-package com.interview.javabinterview.thread.aqs.lock;
+package com.interview.javabinterview.thread.aqs.lockimpl;
 
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.TimeUnit;

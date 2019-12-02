@@ -1,4 +1,4 @@
-package com.interview.javabinterview.thread.aqs.lock;
+package com.interview.javabinterview.thread.aqs.lockimpl;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;

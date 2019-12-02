@@ -1,16 +1,17 @@
-package com.interview.javabinterview.thread.aqs.lock;
+package com.interview.javabinterview.thread.aqs.lockimpl;
 
+import com.interview.javabinterview.thread.aqs.AbstractQueuedSynchronizer;
+import com.interview.javabinterview.thread.aqs.Condition;
 import com.interview.javabinterview.thread.aqs.Lock;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.AbstractQueuedSynchronizer;
-import java.util.concurrent.locks.Condition;
+
 
 public class ReentrantLock implements Lock, java.io.Serializable {
     private static final long serialVersionUID = 7373984872572414699L;
     
-    private final ReentrantLock.Sync sync;
+    private final Sync sync;
 
     abstract static class Sync extends AbstractQueuedSynchronizer {
         private static final long serialVersionUID = -5179523762034025860L;
@@ -77,7 +78,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         }
     }
     
-    static final class NonfairSync extends ReentrantLock.Sync {
+    static final class NonfairSync extends Sync {
         private static final long serialVersionUID = 7316153563782823691L;
         
         final void lock() {
@@ -92,7 +93,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         }
     }
     
-    static final class FairSync extends ReentrantLock.Sync {
+    static final class FairSync extends Sync {
         private static final long serialVersionUID = -3000897897090466540L;
 
         final void lock() {
@@ -121,11 +122,11 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     }
 
     public ReentrantLock() {
-        sync = new ReentrantLock.NonfairSync();
+        sync = new NonfairSync();
     }
 
     public ReentrantLock(boolean fair) {
-        sync = fair ? new ReentrantLock.FairSync() : new ReentrantLock.NonfairSync();
+        sync = fair ? new FairSync() : new NonfairSync();
     }
 
     public void lock() {
@@ -166,7 +167,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     }
 
     public final boolean isFair() {
-        return sync instanceof ReentrantLock.FairSync;
+        return sync instanceof FairSync;
     }
 
     protected Thread getOwner() {
