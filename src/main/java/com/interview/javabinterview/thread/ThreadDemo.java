@@ -36,5 +36,6 @@ public class ThreadDemo {
         ReentrantLock lock1 = new ReentrantLock();
         Condition condition = lock1.newCondition();
         condition.await();
+        lock1.lock();
     }
 }

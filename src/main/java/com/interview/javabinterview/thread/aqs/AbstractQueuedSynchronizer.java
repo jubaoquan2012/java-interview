@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+
 public abstract class AbstractQueuedSynchronizer
         extends AbstractOwnableSynchronizer
         implements java.io.Serializable {
@@ -41,7 +42,7 @@ public abstract class AbstractQueuedSynchronizer
          */
         static final int CONDITION = -2;
         /**
-         * 释放共享资源时,需要通知其他节点
+         * 代表后续结点会传播唤醒的操作，共享模式下起作用
          */
         static final int PROPAGATE = -3;
 
@@ -121,20 +122,21 @@ public abstract class AbstractQueuedSynchronizer
     static final long spinForTimeoutThreshold = 1000L;
 
     /**
-     * 入队操作
+     * 将新的节点插入到等待队列的尾部。如果等待队列不存在，一定要对其初始化
      */
     private Node enq(final Node node) {
         for (; ; ) {
             Node t = tail;
-            //第一次循环初始化 t==null;
             if (t == null) { // Must initialize
+                // 队列为空情况下，CAS操作将头节点进行更新，将头节点设置为空节点(哨兵节点)
                 if (compareAndSetHead(new Node()))//CAS 设置空节 Node()点为 head
                     tail = head; //tail =(哨兵 new Node()) = head
             } else {
-                //第二次循环 t = 哨兵
+                // 尾节点存在的情况下，代表AQS等待队列已经初始化完成。
+                // 与addWaiter一样，先将新增节点的前驱节点链接到尾节点
                 node.prev = t;  //第一次初始化的时候: head = tail = new Node();
-                // 然后来一个节点 作为尾节点; 后来的依次从后面插入,排队
                 if (compareAndSetTail(t, node)) {
+                    // 当更新尾节点成功后，就将原尾节点的后继节点连接为新增的节点
                     t.next = node;
                     return t;
                 }
@@ -146,11 +148,13 @@ public abstract class AbstractQueuedSynchronizer
         // 创建一个新的节点,设置节点中nextWaiter为: EXCLUSIVE 或者 SHARED
         Node node = new Node(Thread.currentThread(), mode);
         Node pred = tail;
-        // 尾结点不为null,说明队列不为空
+        // 当等待队列尾部不为空时，有在等待的线程
         if (pred != null) {
-            node.prev = pred; //当前节点的上一个节点是 pred
-            if (compareAndSetTail(pred, node)) {//CAS 设置当前节点为 tail 节点
-                pred.next = node; //pred 的下一个节点为当前节点
+            // 将新增的节点的前驱节点链接到尾部节点。
+            node.prev = pred;
+            // // 采用CAS的方式进行数据的更新，更新成功后，则将原尾节点的后继节点链接到新增的节点
+            if (compareAndSetTail(pred, node)) {
+                pred.next = node;
                 return node;
             }
         }
@@ -166,6 +170,7 @@ public abstract class AbstractQueuedSynchronizer
         node.prev = null;
     }
 
+    // 唤醒后继结点
     private void unparkSuccessor(Node node) {
         int ws = node.waitStatus;
         // 如果当前节点的状态小于0，将状态更新为0，重置一下
@@ -184,35 +189,70 @@ public abstract class AbstractQueuedSynchronizer
             LockSupport.unpark(s.thread);
     }
 
+    /**
+     *   //从头节点开始， 判断头节点后继的状态，来确定后继需不需要唤醒。
+     */
     private void doReleaseShared() {
-
         for (; ; ) {
             Node h = head;
+            // 只需要处理头节点和尾节点都存在，且队列内的节点总数超过1个的情况
             if (h != null && h != tail) {
                 int ws = h.waitStatus;
+                // 两种模式下都需要SIGNAL信号来判断是否唤醒后继节点
                 if (ws == Node.SIGNAL) {
-                    if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0))
+                    // 如果CAS操作失败了就继续循环处理
+                    if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0)){
                         continue;            // loop to recheck cases
+                    }
+                    // CAS操作成功后，就将后继节点解除阻塞
                     unparkSuccessor(h);
-                } else if (ws == 0 &&
-                        !compareAndSetWaitStatus(h, 0, Node.PROPAGATE))
+                } else if (ws == 0 && !compareAndSetWaitStatus(h, 0, Node.PROPAGATE)){
                     continue;                // loop on failed CAS
+                }
+                // 当状态码是PROPAGATE的时候，就可以结束循环了
             }
+            // 在循环过程中，为了防止在上述操作过程中新添加了节点的情况，
+            // 通过检查头节点是否改变了，如果改变了就继续循环
             if (h == head)                   // loop if head changed
                 break;
         }
     }
 
+    /**
+     * 设置头节点状态，并通过propagate判断是否可以允许acquire
+     */
     private void setHeadAndPropagate(Node node, int propagate) {
         Node h = head; // Record old head for check below
+        setHead(node);
+        // propagate也就是state的更新值大于0，代表可以继续acquire
+
+        /**
+         *这里为什么要判断状态为小于0的情况，直接使用PROPAGATE状态不可以吗？
+         * 这个是因为PROPAGATE状态是会被转换为SIGNAL的，这个在shouldParkAfterFailedAcquire方法中处理的
+         */
         if (propagate > 0 || h == null || h.waitStatus < 0 ||
                 (h = head) == null || h.waitStatus < 0) {
             Node s = node.next;
+            // 判断后继节点是否存在，如果存在是否是共享模式的节点
+            // 然后进行共享模式的释放
+            // 后继节点是共享模式或者s == null（不知道什么情况）
+            // 如果后继是独占模式，那么即使剩下的许可大于0也不会继续往后传递唤醒操作
+            // 即使后面有结点是共享模式。
             if (s == null || s.isShared())
                 doReleaseShared();
         }
     }
 
+    /**
+     * 1.取消的节点是队尾节点tail。那么直接将pred的next和当前节点的prev全部置null。重新设置一下tail节点。
+     * 2.取消的节点是队列中的一个节点，并且不是head头节点的直接后继节点。那么也很容易理解，
+     * 就是将pred的next和当前节点的next进行一个链接。那么有一个疑问，代码中只将next节点链接了，
+     * prev的节点如何连接。这里的prev是由其它线程做的，由于当前节点已经是CANCEL状态，其他线程在进行竞争时，
+     * 都会遍历前驱节点，重新链接前驱节点完成prev的链接。
+     * 3.取消的节点是队列头节点head的直接后继节点。那么如果取消的节点后继节点是存在的，可以直接唤醒后继节点。
+     *
+     * @param node
+     */
     private void cancelAcquire(Node node) {
         if (node == null)
             return;
@@ -252,6 +292,12 @@ public abstract class AbstractQueuedSynchronizer
      * waitStatus状态初始化的值是0。如代码中描述的，waitStatus只有前驱节点是SIGNAL状态才会将当前的线程阻塞住。
      * 其他情况下，waitStatus为非正数时，就会将前驱节点的状态更新为SIGNAL。而状态为正数时，代表节点被取消了，
      * 就会不断向前寻找，直到找到未被取消的节点。取消的节点通通会被垃圾回收机制处理掉。
+     */
+
+    /**
+     * 为什么需要SIGNAL信号才阻塞线程呢？
+     * 其实只是为了在线程park阻塞和解除阻塞的次数不那么频繁，减少了不必要的线程阻塞切换时间。
+     * SIGNAL设置后，只有确定SIGNAL信号的线程才会阻塞。
      */
     private static boolean shouldParkAfterFailedAcquire(Node pred, Node node) {
         //1. 首先获取当前节点的pre结点的状态；
@@ -302,16 +348,21 @@ public abstract class AbstractQueuedSynchronizer
                  * 这个if告诉我们，只有是你的node排队排到第二个了，就下一个就队头了，
                  * 才能再次看能不能获得锁，就用我们重写的tryAcquire来获取锁
                  */
+                // 该节点的前驱节点是头节点，就尝试去获取一下许可
+                // 当获取许可成功后，就可以将头节点设置为当前的节点
+                // 并将后继节点置空，重置状态
                 if (p == head && tryAcquire(arg)) {
                     setHead(node);
                     p.next = null; // help GC
                     failed = false;
                     return interrupted;
                 }
+                // 当获取许可失败后，会判断需不需要对线程进行阻塞
                 if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt())
                     interrupted = true;
             }
         } finally {
+            // 如果执行过程中出现了了错误，或者中断后，就会对数据进行处理，完成销毁的过程。
             if (failed)
                 cancelAcquire(node);
         }
@@ -372,6 +423,7 @@ public abstract class AbstractQueuedSynchronizer
     }
 
     private void doAcquireShared(int arg) {
+        //此处与独占式不同点:addWaiter(Node.EXCLUSIVE)
         final Node node = addWaiter(Node.SHARED);
         boolean failed = true;
         try {
@@ -379,6 +431,7 @@ public abstract class AbstractQueuedSynchronizer
             for (; ; ) {
                 final Node p = node.predecessor();
                 if (p == head) {
+                    //tryAcquire和tryAcquireShared的返回值不同，因此会多出一个判断过程
                     int r = tryAcquireShared(arg);
                     if (r >= 0) {
                         setHeadAndPropagate(node, r);
@@ -389,8 +442,7 @@ public abstract class AbstractQueuedSynchronizer
                         return;
                     }
                 }
-                if (shouldParkAfterFailedAcquire(p, node) &&
-                        parkAndCheckInterrupt())
+                if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt())
                     interrupted = true;
             }
         } finally {
@@ -498,10 +550,27 @@ public abstract class AbstractQueuedSynchronizer
     /**
      * acquire是一种以独占方式获取资源，如果获取到资源，线程直接返回，否则进入等待队列，直到获取到资源为止，且整个过程忽略中断的影响。
      * 该方法是独占模式下线程获取共享资源的顶层入口。获取到资源后，线程就可以去执行其临界区代码了
+     * <p>
+     * 伪代码解释:
+     * acquire {
+     * if (!tryAcquire(arg)) {
+     * node = 创建队列并且新入队节点;                  对应:addWaiter()
+     * pred = 节点的有效前驱节点;
+     * while (pred 不是头节点 || !tryAcquire(arg)) {  对应:acquireQueued()
+     * if (pred的状态位是Signal信号)              对应:shouldParkAfterFailedAcquire() 中的if (ws == Node.SIGNAL) return true;
+     * park();                               对应:parkAndCheckInterrupt ()
+     * else
+     * CAS操作设置pred的Signal信号;           对应: shouldParkAfterFailedAcquire()中的compareAndSetWaitStatus(pred, ws, Node.SIGNAL);
+     * pred = node节点的有效前驱节点;
+     * }
+     * head = node;
+     * }
+     * }
      */
     public final void acquire(int arg) {
         /**
          * https://www.cnblogs.com/wangshen31/p/10478129.html
+         * https://www.jianshu.com/p/d2e5965631dc
          * tryAcquire（）尝试获取资源,
          *  成功直接返回
          *  失败:
@@ -515,9 +584,12 @@ public abstract class AbstractQueuedSynchronizer
 
     public final void acquireInterruptibly(int arg)
             throws InterruptedException {
+        //如果当前线程被中断,则直接抛出异常
         if (Thread.interrupted())
             throw new InterruptedException();
+        //尝试获取资源
         if (!tryAcquire(arg))
+            //调用AQS 可被中断的方法
             doAcquireInterruptibly(arg);
     }
 
@@ -530,6 +602,15 @@ public abstract class AbstractQueuedSynchronizer
                 doAcquireNanos(arg, nanosTimeout);
     }
 
+    /**
+     * 伪代码逻辑:
+     * release {
+     * if (tryRelease(arg) && 头节点的状态是Signal) {
+     * 将头节点的状态设置为不是Signal;
+     * 如果头节点的后继结点存在，则将其唤醒。
+     * }
+     * }
+     */
     public final boolean release(int arg) {
         if (tryRelease(arg)) {
             Node h = head;

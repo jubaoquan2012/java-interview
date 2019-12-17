@@ -145,6 +145,11 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         sync.lock();
     }
 
+    /**
+     * 该方法和lock() 方法类似, 不同于,它对中断进行相应,就是当前线程在调用该方法时,
+     * 如果其他线程代用了当前线程的interrupt()方法,则当前线程会抛出InterruptedException异常,然后返回
+     * @throws InterruptedException
+     */
     public void lockInterruptibly() throws InterruptedException {
         sync.acquireInterruptibly(1);
     }
