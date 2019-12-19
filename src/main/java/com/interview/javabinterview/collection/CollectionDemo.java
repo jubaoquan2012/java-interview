@@ -1,14 +1,11 @@
 package com.interview.javabinterview.collection;
 
 import java.util.*;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CollectionDemo {
     public static void main(String[] args) {
-        new java.util.HashMap<>();
-        new LinkedHashMap<>();
-        Map<Object, Object> hashMap = new HashMap<>();
+        HashMap<Object, Object> hashMap = new HashMap<>();
         hashMap.put("","");
 
         Hashtable<Object, Object> hashtable = new Hashtable<>(10);
@@ -25,5 +22,8 @@ public class CollectionDemo {
 
         ConcurrentHashMap<Object,Object> concurrentHashMap = new ConcurrentHashMap<>();
         concurrentHashMap.put("","");
+
+        System.out.println(15 % 4);
+        System.out.println(15 & (4-1));
     }
 }
