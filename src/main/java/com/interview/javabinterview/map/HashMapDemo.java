@@ -1,6 +1,7 @@
 package com.interview.javabinterview.map;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -17,5 +18,10 @@ public class HashMapDemo {
 
         Map<Object, Object> hashMap = new HashMap<>();
         hashMap.put("","");
+        ArrayList<Object> list = new ArrayList<>();
+        list.add(1);
+        list.get(2);
+
+        new LinkedList<>();
     }
 }
