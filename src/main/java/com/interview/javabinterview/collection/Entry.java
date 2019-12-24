@@ -1,4 +1,4 @@
-package com.interview.javabinterview.map;
+package com.interview.javabinterview.collection;
 
 import java.util.Map;
 
