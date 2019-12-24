@@ -1,6 +1,10 @@
 package com.interview.javabinterview.collection;
 
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CollectionDemo {
@@ -25,5 +29,6 @@ public class CollectionDemo {
 
         System.out.println(15 % 4);
         System.out.println(15 & (4-1));
+        new java.util.HashMap<>();
     }
 }
