@@ -1,6 +1,5 @@
 package com.interview.javabinterview.algorithm;
 
-import sun.security.acl.WorldGroupImpl;
 
 public class Sort1 {
 

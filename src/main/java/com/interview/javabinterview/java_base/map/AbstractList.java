@@ -1,4 +1,4 @@
-package com.interview.javabinterview.map;
+package com.interview.javabinterview.java_base.map;
 
 /**
  * 类
