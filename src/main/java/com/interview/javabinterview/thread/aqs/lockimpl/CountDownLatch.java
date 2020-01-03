@@ -1,8 +1,14 @@
 package com.interview.javabinterview.thread.aqs.lockimpl;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.AbstractQueuedSynchronizer;
+import com.interview.javabinterview.thread.aqs.AbstractQueuedSynchronizer;
 
+import java.util.concurrent.TimeUnit;
+
+/**
+ * step1:初始状态 state = n
+ * step2: 多次调用 countDown : releaseShared(int arg)
+ * step3: await() :acquireSharedInterruptibly(1)
+ */
 public class CountDownLatch {
 
     private static final class Sync extends AbstractQueuedSynchronizer {

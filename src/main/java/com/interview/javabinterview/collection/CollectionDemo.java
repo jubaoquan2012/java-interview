@@ -15,8 +15,6 @@ public class CollectionDemo {
         Hashtable<Object, Object> hashtable = new Hashtable<>(10);
         hashtable.put("","");
 
-        List<Integer> arrayList = new ArrayList<>();
-        arrayList.add(1);
 
         List<Object> linkedList = new LinkedList<>();
         linkedList.add(1);

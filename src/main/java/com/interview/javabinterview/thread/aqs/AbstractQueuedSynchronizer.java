@@ -124,6 +124,20 @@ public abstract class AbstractQueuedSynchronizer
     /**
      * 将新的节点插入到等待队列的尾部。如果等待队列不存在，一定要对其初始化
      */
+
+    /**
+     * unparkSuccessor 方法中for循环从tail 开始而不是header 开始的原因:
+     *
+     *① 处将新结点 node 的 prev 引用指向当前的 t, 即 tail 结点. 然而, 由于 ①, ② 这两行代码的合在一起并非原子性的,
+     * 所以很有可能在设置 tail 时存在着竞争, 也即 tail 被其它线程更新过了. 所以要自旋操作, 即在死循环中操作, 直到成功为止.
+     * 自旋地 CAS volatile 变量是很经典的用法. 如果设置成功了, 那么 从 node.prev 执行完毕到正在用 CAS 设置 tail 时,
+     * tail 变量是没有被修改的, 所以如果 CAS成功, 那么 node.prev = t 一定是指向上一个 tail 的. 同样的, ②, ③ 合在一起也并非原子操作,
+     * 更重要的是, next field 的设置发生在 CAS 操作之后, 所以可能会存在 tail 已经更新, 但是 last tail 的 next field 还未设置完毕,
+     * 即它的 lastTail.next 为 null 这种情况. 因此如果此时访问该结点的 next 引用可能就会得到它在队尾, 不存在后继结点的"错觉".
+     * 而我们总是能够通过从 tail 开始反向查找, 借助可靠的 prev 引用来定位到指定的结点. 简单总结一下, prev 引用的设置发生在 CAS之前,
+     * 因此如果 CAS 设置 tail 成功, 那么 prev 一定是正确地指向 last tail, 而 next 引用的设置发生在其后, 因而会存在一个 tail 更新成功,
+     * 但是 last  tail 的 next 引用还未设置的尴尬时期. 所以我们说 prev 是可靠的, 而 next 有时会为 null, 但并不一定真的就没有后继结点.
+     */
     private Node enq(final Node node) {
         for (; ; ) {
             Node t = tail;
@@ -134,9 +148,9 @@ public abstract class AbstractQueuedSynchronizer
             } else {
                 // 尾节点存在的情况下，代表AQS等待队列已经初始化完成。
                 // 与addWaiter一样，先将新增节点的前驱节点链接到尾节点
-                node.prev = t;  //第一次初始化的时候: head = tail = new Node();
-                if (compareAndSetTail(t, node)) {
-                    // 当更新尾节点成功后，就将原尾节点的后继节点连接为新增的节点
+                node.prev = t;  //第一次初始化的时候: head = tail = new Node();    // ①
+                if (compareAndSetTail(t, node)) {                                  // ②
+                    // 当更新尾节点成功后，就将原尾节点的后继节点连接为新增的节点  // ③
                     t.next = node;
                     return t;
                 }
@@ -158,7 +172,6 @@ public abstract class AbstractQueuedSynchronizer
                 return node;
             }
         }
-
         // 尾结点为null,说明队列为空
         enq(node);
         return node;
@@ -170,7 +183,10 @@ public abstract class AbstractQueuedSynchronizer
         node.prev = null;
     }
 
-    // 唤醒后继结点
+    /**
+     *  唤醒后继结点
+     * @param node 当前节点
+     */
     private void unparkSuccessor(Node node) {
         int ws = node.waitStatus;
         // 如果当前节点的状态小于0，将状态更新为0，重置一下
@@ -181,6 +197,7 @@ public abstract class AbstractQueuedSynchronizer
             // 置后继节点为null，
             s = null;
             // 若当前节点发生了取消操作，重新从尾部开始遍历，找到没有标记为取消的节点进行阻塞操作
+            //循环找到最前面第一个不为null,且
             for (Node t = tail; t != null && t != node; t = t.prev)
                 if (t.waitStatus <= 0)
                     s = t;
@@ -222,7 +239,7 @@ public abstract class AbstractQueuedSynchronizer
      * 设置头节点状态，并通过propagate判断是否可以允许acquire
      */
     private void setHeadAndPropagate(Node node, int propagate) {
-        Node h = head; // Record old head for check below
+        Node h = head; //备份当前 head
         setHead(node);
         // propagate也就是state的更新值大于0，代表可以继续acquire
 
@@ -453,22 +470,30 @@ public abstract class AbstractQueuedSynchronizer
 
     private void doAcquireSharedInterruptibly(int arg)
             throws InterruptedException {
+        //加入等待队列
         final Node node = addWaiter(Node.SHARED);
         boolean failed = true;
+        //进入 CAS 循环
         try {
             for (; ; ) {
+                //当一个节点(关联一个线程)进入等待队列后， 获取此节点的 prev 节点
                 final Node p = node.predecessor();
+                // 如果获取到的 prev 是 head，也就是队列中第一个等待线程
                 if (p == head) {
-                    int r = tryAcquireShared(arg);
+                    // 再次尝试申请 反应到 CountDownLatch 就是查看是否还有线程需要等待(state是否为0)
+                    int r = tryAcquireShared(arg);// return (getState() == 0) ? 1 : -1;
+                    //如果 r >=0 说明 没有线程需要等待了 state==0
                     if (r >= 0) {
+                        //尝试将第一个线程关联的节点设置为 head
                         setHeadAndPropagate(node, r);
                         p.next = null; // help GC
                         failed = false;
                         return;
                     }
                 }
-                if (shouldParkAfterFailedAcquire(p, node) &&
-                        parkAndCheckInterrupt())
+                //经过自旋tryAcquireShared后，state还不为0，就会到这里，第一次的时候，waitStatus是0，
+                //那么node的waitStatus就会被置为SIGNAL，第二次再走到这里，就会用LockSupport的park方法把当前线程阻塞住
+                if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt())
                     throw new InterruptedException();
             }
         } finally {
@@ -637,7 +662,7 @@ public abstract class AbstractQueuedSynchronizer
             throws InterruptedException {
         if (Thread.interrupted())
             throw new InterruptedException();
-        if (tryAcquireShared(arg) < 0)
+        if (tryAcquireShared(arg) < 0)//尝试获取资源,获取失败执行 doAcquireSharedInterruptibly(arg);
             doAcquireSharedInterruptibly(arg);
     }
 
