@@ -27,12 +27,12 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         abstract void lock();
 
         final boolean nonfairTryAcquire(int acquires) {
-            final Thread current = Thread.currentThread();
-            int c = getState();
-            if (c == 0) {
-                if (compareAndSetState(0, acquires)) {
-                    setExclusiveOwnerThread(current);
-                    return true;
+            final Thread current = Thread.currentThread();//获取当前线程实例
+            int c = getState();//获取state变量的值,即当前锁被重入的次数
+            if (c == 0) {//state为0,说明当前锁未被任何线程持有
+                if (compareAndSetState(0, acquires)) {//以cas方式获取锁
+                    setExclusiveOwnerThread(current); //将当前线程标记为持有锁的线程
+                    return true;//获取锁成功,非重入
                 }
             } else if (current == getExclusiveOwnerThread()) {
                 int nextc = c + acquires;
@@ -91,6 +91,9 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     static final class NonfairSync extends Sync {
         private static final long serialVersionUID = 7316153563782823691L;
 
+        /**
+         * 非公平锁,调用lock 先直接获取锁,如果失败再调用acquire;
+         */
         final void lock() {
             if (compareAndSetState(0, 1))
                 setExclusiveOwnerThread(Thread.currentThread());
