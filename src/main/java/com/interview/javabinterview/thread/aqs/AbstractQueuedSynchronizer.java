@@ -19,14 +19,13 @@ public abstract class AbstractQueuedSynchronizer
     }
 
     static final class Node {
-
-        /**
-         * Exclusive（独占，只有一个线程能执行，如ReentrantLock）
-         */
-        static final Node SHARED = new Node();
-
         /**
          * （共享，多个线程可同时执行，如Semaphore/CountDownLatch）
+         */
+        static final Node SHARED = new Node();
+        /**
+         * Exclusive（独占，只有一个线程能执行，如ReentrantLock）
+         * 空节点:EXCLUSIVE = null
          */
         static final Node EXCLUSIVE = null;
         /**
@@ -127,8 +126,8 @@ public abstract class AbstractQueuedSynchronizer
 
     /**
      * unparkSuccessor 方法中for循环从tail 开始而不是header 开始的原因:
-     *
-     *① 处将新结点 node 的 prev 引用指向当前的 t, 即 tail 结点. 然而, 由于 ①, ② 这两行代码的合在一起并非原子性的,
+     * <p>
+     * ① 处将新结点 node 的 prev 引用指向当前的 t, 即 tail 结点. 然而, 由于 ①, ② 这两行代码的合在一起并非原子性的,
      * 所以很有可能在设置 tail 时存在着竞争, 也即 tail 被其它线程更新过了. 所以要自旋操作, 即在死循环中操作, 直到成功为止.
      * 自旋地 CAS volatile 变量是很经典的用法. 如果设置成功了, 那么 从 node.prev 执行完毕到正在用 CAS 设置 tail 时,
      * tail 变量是没有被修改的, 所以如果 CAS成功, 那么 node.prev = t 一定是指向上一个 tail 的. 同样的, ②, ③ 合在一起也并非原子操作,
@@ -141,17 +140,13 @@ public abstract class AbstractQueuedSynchronizer
     private Node enq(final Node node) {
         for (; ; ) {
             Node t = tail;
-            if (t == null) { // Must initialize
-                // 队列为空情况下，CAS操作将头节点进行更新，将头节点设置为空节点(哨兵节点)
-                if (compareAndSetHead(new Node()))//CAS 设置空节 Node()点为 head
-                    tail = head; //tail =(哨兵 new Node()) = head
-            } else {
-                // 尾节点存在的情况下，代表AQS等待队列已经初始化完成。
-                // 与addWaiter一样，先将新增节点的前驱节点链接到尾节点
-                node.prev = t;  //第一次初始化的时候: head = tail = new Node();    // ①
-                if (compareAndSetTail(t, node)) {                                  // ②
-                    // 当更新尾节点成功后，就将原尾节点的后继节点连接为新增的节点  // ③
-                    t.next = node;
+            if (t == null) {                        // 尾节点不存在,队列为空:Must initialize
+                if (compareAndSetHead(new Node()))  // CAS操作将头节点进行更新，将头节点设置为空节点(哨兵节点)
+                    tail = head;                    // head = tail =(哨兵 new Node())
+            } else {                                // 尾节点存在的情况下，代表AQS等待队列已经初始化完成。
+                node.prev = t;                      // ①:第一次初始化的时候: head = tail = new Node();
+                if (compareAndSetTail(t, node)) {   // ② CAS 设置尾节点
+                    t.next = node;                  // ③ 当更新尾节点成功后，就将原尾节点的后继节点连接为新增的节点
                     return t;
                 }
             }
@@ -159,21 +154,16 @@ public abstract class AbstractQueuedSynchronizer
     }
 
     private Node addWaiter(Node mode) {
-        // 创建一个新的节点,设置节点中nextWaiter为: EXCLUSIVE 或者 SHARED
-        Node node = new Node(Thread.currentThread(), mode);
+        Node node = new Node(Thread.currentThread(), mode); // 创建一个新的节点,设置节点中nextWaiter为: EXCLUSIVE 或者 SHARED
         Node pred = tail;
-        // 当等待队列尾部不为空时，有在等待的线程
-        if (pred != null) {
-            // 将新增的节点的前驱节点链接到尾部节点。
-            node.prev = pred;
-            // // 采用CAS的方式进行数据的更新，更新成功后，则将原尾节点的后继节点链接到新增的节点
-            if (compareAndSetTail(pred, node)) {
+        if (pred != null) {                                 // 当等待队列尾部不为空时，有在等待的线程
+            node.prev = pred;                               // 将新增的节点的前驱节点链接到尾部节点。
+            if (compareAndSetTail(pred, node)) {            // 采用CAS的方式进行数据的更新，更新成功后，则将原尾节点的后继节点链接到新增的节点
                 pred.next = node;
-                return node;
+                return node;                                // 执行结束返回当前节点
             }
         }
-        // 尾结点为null,说明队列为空
-        enq(node);
+        enq(node);                                          // 执行到这里,尾结点为null ===>说明队列为空
         return node;
     }
 
@@ -184,7 +174,8 @@ public abstract class AbstractQueuedSynchronizer
     }
 
     /**
-     *  唤醒后继结点
+     * 唤醒后继结点
+     *
      * @param node 当前节点
      */
     private void unparkSuccessor(Node node) {
@@ -207,7 +198,7 @@ public abstract class AbstractQueuedSynchronizer
     }
 
     /**
-     *   //从头节点开始， 判断头节点后继的状态，来确定后继需不需要唤醒。
+     * //从头节点开始， 判断头节点后继的状态，来确定后继需不需要唤醒。
      */
     private void doReleaseShared() {
         for (; ; ) {
@@ -218,12 +209,12 @@ public abstract class AbstractQueuedSynchronizer
                 // 两种模式下都需要SIGNAL信号来判断是否唤醒后继节点
                 if (ws == Node.SIGNAL) {
                     // 如果CAS操作失败了就继续循环处理
-                    if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0)){
+                    if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0)) {
                         continue;            // loop to recheck cases
                     }
                     // CAS操作成功后，就将后继节点解除阻塞
                     unparkSuccessor(h);
-                } else if (ws == 0 && !compareAndSetWaitStatus(h, 0, Node.PROPAGATE)){
+                } else if (ws == 0 && !compareAndSetWaitStatus(h, 0, Node.PROPAGATE)) {
                     continue;                // loop on failed CAS
                 }
                 // 当状态码是PROPAGATE的时候，就可以结束循环了
@@ -603,7 +594,8 @@ public abstract class AbstractQueuedSynchronizer
          *      2.acquireQueued()使线程在等待队列中获取资源，一直获取到资源后才返回。如果在整个等待过程中被中断过，则返回true，否则返回false。
          * 4.如果线程在等待过程中被中断过，它是不响应的。只是获取资源后才再进行自我中断selfInterrupt()，将中断补上。
          */
-        if (!tryAcquire(arg) && acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+        if (!tryAcquire(arg)  //当前线程尝试获取锁,若获取成功返回true,否则false
+                && acquireQueued(addWaiter(Node.EXCLUSIVE), arg)) //只有当前线程获取锁失败才会执行者这部分代码
             selfInterrupt();
     }
 

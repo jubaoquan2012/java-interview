@@ -34,14 +34,14 @@ public class ReentrantLock implements Lock, java.io.Serializable {
                     setExclusiveOwnerThread(current);           //将当前线程标记为持有锁的线程
                     return true;                                //获取锁成功,非重入
                 }
-            } else if (current == getExclusiveOwnerThread()) {
+            } else if (current == getExclusiveOwnerThread()) {  //当前线程就是持有锁的线程,说明该锁被重入了
                 int nextc = c + acquires;
-                if (nextc < 0) // overflow  2^31-1 = 2147483647
+                if (nextc < 0)                                  // overflow  2^31-1 = 2147483647
                     throw new Error("Maximum lock count exceeded");
-                setState(nextc);
-                return true;
+                setState(nextc);                                //非同步方式更新state值
+                return true;                                    //获取锁成功,重入
             }
-            return false;
+            return false;                                       //走到这里说明尝试获取锁失败
         }
 
         protected final boolean tryRelease(int releases) {
