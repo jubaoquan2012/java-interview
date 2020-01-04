@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 可重入锁:
- *      1.独占锁
- *      2.state: 表示该所的可重入次数
+ * 1.独占锁
+ * 2.state: 表示该所的可重入次数
  */
 public class ReentrantLock implements Lock, java.io.Serializable {
     private static final long serialVersionUID = 7373984872572414699L;
@@ -27,12 +27,12 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         abstract void lock();
 
         final boolean nonfairTryAcquire(int acquires) {
-            final Thread current = Thread.currentThread();//获取当前线程实例
-            int c = getState();//获取state变量的值,即当前锁被重入的次数
-            if (c == 0) {//state为0,说明当前锁未被任何线程持有
-                if (compareAndSetState(0, acquires)) {//以cas方式获取锁
-                    setExclusiveOwnerThread(current); //将当前线程标记为持有锁的线程
-                    return true;//获取锁成功,非重入
+            final Thread current = Thread.currentThread();      //获取当前线程实例
+            int c = getState();                                 //获取state变量的值,即当前锁被重入的次数
+            if (c == 0) {                                       //state为0,说明当前锁未被任何线程持有
+                if (compareAndSetState(0, acquires)) {  //以cas方式获取锁
+                    setExclusiveOwnerThread(current);           //将当前线程标记为持有锁的线程
+                    return true;                                //获取锁成功,非重入
                 }
             } else if (current == getExclusiveOwnerThread()) {
                 int nextc = c + acquires;
@@ -151,6 +151,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     /**
      * 该方法和lock() 方法类似, 不同于,它对中断进行相应,就是当前线程在调用该方法时,
      * 如果其他线程代用了当前线程的interrupt()方法,则当前线程会抛出InterruptedException异常,然后返回
+     *
      * @throws InterruptedException
      */
     public void lockInterruptibly() throws InterruptedException {
