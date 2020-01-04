@@ -308,22 +308,16 @@ public abstract class AbstractQueuedSynchronizer
      * SIGNAL设置后，只有确定SIGNAL信号的线程才会阻塞。
      */
     private static boolean shouldParkAfterFailedAcquire(Node pred, Node node) {
-        //1. 首先获取当前节点的pre结点的状态；
-        int ws = pred.waitStatus;
-        // 只有SIGNAL状态才能阻塞线程
-        if (ws == Node.SIGNAL)
+        int ws = pred.waitStatus;   // 首先获取当前节点的pre结点的状态；
+        if (ws == Node.SIGNAL)      // 只有SIGNAL状态才能阻塞线程
             return true;
-        //pre结点的状态大于0，也就是CANCELLED，那么就要改pre指针，跳过这些cancelled的node，
-        // 直到找到一个不是cancelled的node作为新的pre结点。
-        if (ws > 0) {
-            do {
-                // 向队列的前驱节点找,一直到找到一个状态码小于0的,也就是非CANCEL状态的
+        if (ws > 0) {               // pre结点的状态大于0，也就是CANCELLED 状态
+            do {                    // 向队列的前驱节点找,一直到找到一个状态码小于0的,也就是非CANCEL状态的
                 node.prev = pred = pred.prev;
             } while (pred.waitStatus > 0);
             pred.next = node;
-        } else {
-            // 如果前驱节点的状态是小于0的，CAS方式将前驱节点的状态更新为SIGNAL。同时不对线程阻塞
-            compareAndSetWaitStatus(pred, ws, Node.SIGNAL);
+        } else {                    // 如果前驱节点的状态是小于0的， ws must be 0 or PROPAGATE.
+            compareAndSetWaitStatus(pred, ws, Node.SIGNAL);//CAS方式将前驱节点的状态更新为SIGNAL。同时不对线程阻塞
         }
         return false;
     }
@@ -336,8 +330,6 @@ public abstract class AbstractQueuedSynchronizer
      * LockSupport.park对线程进行了阻塞，返回线程是否被中断的状态。
      * LockSupport的细节不做解释，简单来说，它主要是用来解决Thread.suspend这种方法会产生死锁的问题，
      * 同时能够对线程进行阻塞，核心是由native方法进行处理
-     *
-     * @return
      */
     private final boolean parkAndCheckInterrupt() {
         LockSupport.park(this);
@@ -348,25 +340,18 @@ public abstract class AbstractQueuedSynchronizer
         boolean failed = true;
         try {
             boolean interrupted = false;
-            for (; ; ) {
-                //获取当前节点的先驱节点
-                final Node p = node.predecessor();
-                /**
-                 * 如果当前节点的前一个节点是head 节点(说明当前节点已经是头节点了) ,并且获取资源成功
-                 * 这个if告诉我们，只有是你的node排队排到第二个了，就下一个就队头了，
-                 * 才能再次看能不能获得锁，就用我们重写的tryAcquire来获取锁
-                 */
-                // 该节点的前驱节点是头节点，就尝试去获取一下许可
-                // 当获取许可成功后，就可以将头节点设置为当前的节点
-                // 并将后继节点置空，重置状态
-                if (p == head && tryAcquire(arg)) {
-                    setHead(node);
-                    p.next = null; // help GC
+            for (; ; ) {                                    //死循环,正常情况下线程只有获得锁才能跳出循环
+                final Node p = node.predecessor();          //获取当前节点的先驱节点
+                /**第一个if分句*/
+                if (p == head && tryAcquire(arg)) {         //该节点的前驱节点是头节点，就尝试去获取一下许可,当获取许可成功后，就可以将头节点设置为当前的节点,并将后继节点置空，重置状态
+                    setHead(node);                          //将当前结点设置为队列头结点, 并且head = node; node.thread = null; node.prev = null
+                    p.next = null;                          // help GC
                     failed = false;
-                    return interrupted;
+                    return interrupted;                     //正常情况下死循环唯一的出口
                 }
-                // 当获取许可失败后，会判断需不需要对线程进行阻塞
-                if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt())
+                /**第二个if分句*/
+                if (shouldParkAfterFailedAcquire(p, node)  //当前节点node的前驱节点p 的waitStatus = SIGNAL 状态才会返回true, 然后执行parkAndCheckInterrupt ,其他状态都是返回false, 不进行阻塞
+                        && parkAndCheckInterrupt())
                     interrupted = true;
             }
         } finally {
@@ -623,8 +608,8 @@ public abstract class AbstractQueuedSynchronizer
      * 伪代码逻辑:
      * release {
      * if (tryRelease(arg) && 头节点的状态是Signal) {
-     * 将头节点的状态设置为不是Signal;
-     * 如果头节点的后继结点存在，则将其唤醒。
+     *      将头节点的状态设置为不是Signal;
+     *      如果头节点的后继结点存在，则将其唤醒。
      * }
      * }
      */

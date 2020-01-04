@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit;
  * 可重入锁:
  * 1.独占锁
  * 2.state: 表示该所的可重入次数
+ *
+ * https://www.cnblogs.com/takumicx/p/9402021.html
  */
 public class ReentrantLock implements Lock, java.io.Serializable {
     private static final long serialVersionUID = 7373984872572414699L;
@@ -49,9 +51,9 @@ public class ReentrantLock implements Lock, java.io.Serializable {
             if (Thread.currentThread() != getExclusiveOwnerThread())
                 throw new IllegalMonitorStateException();
             boolean free = false;
-            if (c == 0) {
+            if (c == 0) {                                       //待更新的state值为0,说明持有锁的线程未重入,一旦释放锁其他线程将能获取
                 free = true;
-                setExclusiveOwnerThread(null);
+                setExclusiveOwnerThread(null);                  //清除锁的持有线程标记
             }
             setState(c);
             return free;
