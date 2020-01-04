@@ -55,7 +55,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
                 free = true;
                 setExclusiveOwnerThread(null);                  //清除锁的持有线程标记
             }
-            setState(c);
+            setState(c);                                        //更新state值
             return free;
         }
 

@@ -604,27 +604,15 @@ public abstract class AbstractQueuedSynchronizer
                 doAcquireNanos(arg, nanosTimeout);
     }
 
-    /**
-     * 伪代码逻辑:
-     * release {
-     * if (tryRelease(arg) && 头节点的状态是Signal) {
-     *      将头节点的状态设置为不是Signal;
-     *      如果头节点的后继结点存在，则将其唤醒。
-     * }
-     * }
-     */
     public final boolean release(int arg) {
-        if (tryRelease(arg)) {
+        if (tryRelease(arg)) {                      //释放锁(state-1),若释放后锁可被其他线程获取(state=0),返回true
             Node h = head;
-            /**
-             * 若头节点存在，且头节点的waitStatus状态是非0，也就说明AQS不是初始化阶段
-             *
-             * waitStatus状态是0，代表这个节点的状态还未更新，因此AQS没有将后继节点进行阻塞，
-             * 这个时候就不能去做unpark的操作。
+            /*
+             * 第一种情况:若头节点存在，且头节点的waitStatus状态是非0，也就说明AQS不是初始化阶段
+             * 第二种情况:waitStatus状态是0，代表这个节点的状态还未更新，因此AQS没有将后继节点进行阻塞，这个时候就不能去做unpark的操作。
              */
-            if (h != null && h.waitStatus != 0)
-                //将后继节点的线程唤醒
-                unparkSuccessor(h);
+            if (h != null && h.waitStatus != 0)     //当前队列不为空且头结点状态不为初始化状态(0)
+                unparkSuccessor(h);                 //将后继节点的线程唤醒
             return true;
         }
         return false;
