@@ -1,8 +1,6 @@
 package com.interview.javabinterview.thread.thread_method;
 
-import com.interview.javabinterview.java_base.map.ArrayList;
 
-import java.util.List;
 
 /**
  * 类
@@ -14,6 +12,7 @@ public class Thread_Join_Demo extends Thread {
 
     private int n;
     private Thread previousThread;
+
     public Thread_Join_Demo(int n, Thread previousThread) {
         this.n = n;
         this.previousThread = previousThread;
