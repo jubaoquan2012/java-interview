@@ -1,4 +1,4 @@
-package com.interview.javabinterview.thread.thradpool;
+package com.interview.javabinterview.thread.executor;
 
 public interface RejectedExecutionHandler {
 

@@ -19,6 +19,7 @@ public class LockSupportDemo {
         for (int i = 0; i < 2; i++) {
             System.out.println("开始线程唤醒");
             LockSupport.unpark(parkThread);
+            LockSupport.park(new LockSupportDemo());
             System.out.println("结束线程唤醒");
         }
     }
@@ -38,5 +39,52 @@ public class LockSupportDemo {
                 System.out.println("结束线程阻塞");
             }
         }
+
+
+
+
+
+
+
+
+        /**
+         *  * persistent://platform/odp/staff.invite.register
+         *  * persistent://platform/odp/staff.update.mobile
+         *  * persistent://platform/im/operationLog.deleteSession
+         *  * persistent://platform/odp/staff.update.email
+         *  * persistent://platform/im/operationLog.addSession
+         *  * persistent://platform/odp/ihr.staff.reset.pwd
+         *  persistent://b/daapiservice/alibaba.assetsredeem.message
+
+
+         * persistent://middle/resumeextend/create.yueliao.jobresume
+         * persistent://middle/resumeextend/resume.download
+         * persistent://middle/resumeextend/resume.changeStatus
+         * persistent://middle/resumeextend/resume.view
+         * persistent://middle/resumeextend/label.delete
+         * persistent://middle/resumeextend/label.update
+         * persistent://middle/resumeextend/comment.add
+         * persistent://middle/resumeextend/forward.mail
+         * persistent://middle/resumeextend/save.local
+         * persistent://middle/resumeextend/recommend.job
+         * persistent://middle/resumeextend/resume.join.recycle
+         * persistent://middle/resumeextend/resume.recover
+         * persistent://middle/resumeextend/resume.delete
+         * persistent://middle/resumeextend/exam.add
+         * persistent://middle/resumeextend/exam.complete
+         * persistent://middle/resumeextend/interview.reject
+         * persistent://middle/resumeextend/interview.accept
+         * persistent://middle/resumeextend/update.interview.attendType
+         * persistent://middle/resumeextend/interview.notification.by.mail
+         * persistent://middle/resumeextend/interview.notification.by.sms
+         * persistent://middle/resumeextend/resume.move.to.folder
+         * persistent://middle/resumeextend/resume.forward.to.applet
+         * persistent://middle/resumeextend/applysuccess
+         * persistent://platform/im/operationLog.receiveSession
+         * persistent://middle/interview/create.resume.interview
+         * persistent://middle/interview/create.interview.detail
+         * persistent://migrationlog/resume/log
+         */
+
     }
 }

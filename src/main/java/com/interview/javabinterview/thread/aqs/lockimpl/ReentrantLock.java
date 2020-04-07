@@ -7,15 +7,15 @@ import com.interview.javabinterview.thread.aqs.Lock;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-
 /**
  * 可重入锁:
  * 1.独占锁
  * 2.state: 表示该所的可重入次数
- *
+ * <p>
  * https://www.cnblogs.com/takumicx/p/9402021.html
  */
 public class ReentrantLock implements Lock, java.io.Serializable {
+
     private static final long serialVersionUID = 7373984872572414699L;
 
     private final Sync sync;
@@ -24,6 +24,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      * 内部类 ,继承 AQS.
      */
     abstract static class Sync extends AbstractQueuedSynchronizer {
+
         private static final long serialVersionUID = -5179523762034025860L;
 
         abstract void lock();
@@ -39,7 +40,9 @@ public class ReentrantLock implements Lock, java.io.Serializable {
             } else if (current == getExclusiveOwnerThread()) {  //当前线程就是持有锁的线程,说明该锁被重入了
                 int nextc = c + acquires;
                 if (nextc < 0)                                  // overflow  2^31-1 = 2147483647
+                {
                     throw new Error("Maximum lock count exceeded");
+                }
                 setState(nextc);                                //非同步方式更新state值
                 return true;                                    //获取锁成功,重入
             }
@@ -48,8 +51,9 @@ public class ReentrantLock implements Lock, java.io.Serializable {
 
         protected final boolean tryRelease(int releases) {
             int c = getState() - releases;
-            if (Thread.currentThread() != getExclusiveOwnerThread())
+            if (Thread.currentThread() != getExclusiveOwnerThread()) {
                 throw new IllegalMonitorStateException();
+            }
             boolean free = false;
             if (c == 0) {                                       //待更新的state值为0,说明持有锁的线程未重入,一旦释放锁其他线程将能获取
                 free = true;
@@ -90,17 +94,22 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     /**
      * 非公平锁
      */
+    /**
+     *
+     */
     static final class NonfairSync extends Sync {
+
         private static final long serialVersionUID = 7316153563782823691L;
 
         /**
          * 非公平锁,调用lock 先直接获取锁,如果失败再调用acquire;
          */
         final void lock() {
-            if (compareAndSetState(0, 1))
+            if (compareAndSetState(0, 1)) {
                 setExclusiveOwnerThread(Thread.currentThread());
-            else
+            } else {
                 acquire(1);
+            }
         }
 
         protected final boolean tryAcquire(int acquires) {
@@ -109,6 +118,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     }
 
     static final class FairSync extends Sync {
+
         private static final long serialVersionUID = -3000897897090466540L;
 
         final void lock() {
@@ -126,8 +136,9 @@ public class ReentrantLock implements Lock, java.io.Serializable {
                 }
             } else if (current == getExclusiveOwnerThread()) {
                 int nextc = c + acquires;
-                if (nextc < 0)
+                if (nextc < 0) {
                     throw new Error("Maximum lock count exceeded");
+                }
                 setState(nextc);
                 return true;
             }
@@ -214,26 +225,32 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     }
 
     public boolean hasWaiters(Condition condition) {
-        if (condition == null)
+        if (condition == null) {
             throw new NullPointerException();
-        if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
+        }
+        if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) {
             throw new IllegalArgumentException("not owner");
+        }
         return sync.hasWaiters((AbstractQueuedSynchronizer.ConditionObject) condition);
     }
 
     public int getWaitQueueLength(Condition condition) {
-        if (condition == null)
+        if (condition == null) {
             throw new NullPointerException();
-        if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
+        }
+        if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) {
             throw new IllegalArgumentException("not owner");
+        }
         return sync.getWaitQueueLength((AbstractQueuedSynchronizer.ConditionObject) condition);
     }
 
     protected Collection<Thread> getWaitingThreads(Condition condition) {
-        if (condition == null)
+        if (condition == null) {
             throw new NullPointerException();
-        if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
+        }
+        if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) {
             throw new IllegalArgumentException("not owner");
+        }
         return sync.getWaitingThreads((AbstractQueuedSynchronizer.ConditionObject) condition);
     }
 

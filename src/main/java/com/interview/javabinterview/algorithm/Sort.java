@@ -1,19 +1,6 @@
 package com.interview.javabinterview.algorithm;
 
 public class Sort {
-    private static void print(int[] array) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        for (int i = 0; i < array.length; i++) {
-            sb.append(array[i]);
-            if (i < array.length - 1) {
-                sb.append(",");
-            }
-        }
-        sb.append("}");
-        System.out.println(sb.toString());
-    }
-
 
     public static void main(String[] args) {
         int[] array = {26, 45, 59, 14, 18, 21, 17, 18};
@@ -22,16 +9,16 @@ public class Sort {
         // 希尔排序
         /**选择排序*/
         // 简单选择排序
-        selectionSort(array);
+        //selectionSort(array);
         // 堆排序
         /**交换排序*/
         // 冒泡排序
         // bubbleSort(array);
         // 快速排序
-        // quickSort(array, 0, array.length - 1);
+         quickSort(array, 0, array.length - 1);
         /**归并排序*/
         /**基数排序*/
-        print(array);
+        AlgorithmUtils.print(array);
     }
 
     /**
@@ -63,13 +50,13 @@ public class Sort {
             return;
         }
 
-        int temp = array[low];
+        int pivot = array[low];
         int left = low, right = high;
         while (left < right) {
-            while (left < right && array[right] >= temp) {
+            while (left < right && array[right] >= pivot) {
                 right--;
             }
-            while (left < right && array[left] <= temp) {
+            while (left < right && array[left] <= pivot) {
                 left++;
             }
             if (left < right) {
@@ -80,7 +67,7 @@ public class Sort {
         }
 
         array[low] = array[left];
-        array[left] = temp;
+        array[left] = pivot;
 
         quickSort(array, left + 1, high);
         quickSort(array, low, left - 1);
@@ -105,5 +92,4 @@ public class Sort {
             array[i] = temp;
         }
     }
-
 }
