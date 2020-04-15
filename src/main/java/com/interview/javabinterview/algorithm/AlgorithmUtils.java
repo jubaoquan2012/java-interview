@@ -55,4 +55,23 @@ public class AlgorithmUtils {
         }
         return array;
     }
+
+    /**
+     * 把endIndex 的数插入到beginIndex后面
+     * 1 2 3 4 5 6 7 8 9 把 8 插入到 3 的后面 其他的相对位置不变
+     * 1 2 3 8 4 5 6 7 9
+     *
+     * @return
+     */
+    private static int[] test(int[] array, int beginIndex, int endIndex) {
+        //第一步, 把endIndex临时保存
+        int temp = array[endIndex];
+        //第二步, 从
+        for (int i = endIndex; i > beginIndex; i--) {
+            array[i] = array[i - 1];
+        }
+        //第三步,将最后endIndex 放入到beginIndex+1
+        array[beginIndex + 1] = temp;
+        return array;
+    }
 }

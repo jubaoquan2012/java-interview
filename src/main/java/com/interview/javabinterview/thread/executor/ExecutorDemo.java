@@ -21,6 +21,10 @@ public class ExecutorDemo {
                 new LinkedBlockingQueue<Runnable>());
 
         threadPoolExecutor.execute(new MyThread());
+        threadPoolExecutor.shutdown();
+        threadPoolExecutor.shutdownNow();
+        threadPoolExecutor.allowCoreThreadTimeOut(true);
+
         Future<String> submit = threadPoolExecutor.submit(new MyCallable());
         String s1 = submit.get();
 
