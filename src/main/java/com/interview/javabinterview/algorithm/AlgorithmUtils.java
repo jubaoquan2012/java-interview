@@ -1,4 +1,8 @@
-package com.interview.javabinterview.algorithm;
+package com.interview.javabinterview.a_algorithm;
+
+import com.interview.javabinterview.java_base.map.ArrayList;
+
+import java.util.List;
 
 /**
  * 类
@@ -56,6 +60,16 @@ public class AlgorithmUtils {
         return array;
     }
 
+    public static void reverseArray(int[] array, int startIndex) {
+        int i = startIndex;
+        int j = array.length - 1;
+        while (i < j) {
+            swap(array, i, j);
+            i++;
+            j--;
+        }
+    }
+
     /**
      * 把endIndex 的数插入到beginIndex后面
      * 1 2 3 4 5 6 7 8 9 把 8 插入到 3 的后面 其他的相对位置不变
@@ -72,6 +86,22 @@ public class AlgorithmUtils {
         }
         //第三步,将最后endIndex 放入到beginIndex+1
         array[beginIndex + 1] = temp;
+        return array;
+    }
+
+    public static int[] parseIntToArray(int num) {
+        if (num <= 0) {
+            return null;
+        }
+        List<Integer> list = new ArrayList<>();
+        while (num > 0) {
+            list.add(num % 10);
+            num = num / 10;
+        }
+        int[] array = new int[list.size()];
+        for (int i = list.size() - 1, j = 0; i >= 0; i--, j++) {
+            array[j] = list.get(i);
+        }
         return array;
     }
 }

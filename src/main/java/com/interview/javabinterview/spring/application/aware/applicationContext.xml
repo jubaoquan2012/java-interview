@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+				http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+    <!-- init-method：指定初始化的方法
+            destroy-method：指定销毁的方法 -->
+    <bean id="student" class="com.interview.javabinterview.spring.bean.student" init-method="myInit" destroy-method="myDestroy">
+        <property name="name" value="LINJIE"></property>
+        <property name="age" value="12"></property>
+    </bean>
+</beans>
