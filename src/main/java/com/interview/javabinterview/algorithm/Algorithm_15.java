@@ -1,4 +1,4 @@
-package com.interview.javabinterview.a_algorithm;
+package com.interview.javabinterview.algorithm;
 
 /**
  * @author: heshineng

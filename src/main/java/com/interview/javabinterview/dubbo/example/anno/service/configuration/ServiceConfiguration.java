@@ -1,4 +1,4 @@
-package com.interview.javabinterview.dubbo.anno.service.configuration;
+package com.interview.javabinterview.dubbo.example.anno.service.configuration;
 
 import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.ProtocolConfig;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * Created at  2020/4/13
  */
 @Configuration
-@EnableDubbo(scanBasePackages = "com.interview.javabinterview.dubbo.anno")
+@EnableDubbo(scanBasePackages = "com.interview.javabinterview.dubbo.example.anno")
 public class ServiceConfiguration {
 
     @Bean

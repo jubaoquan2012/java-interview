@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.threadpool.bootimpl;
+package com.interview.javabinterview.spring.springboot.threadpool.bootimpl;
 
 /**
  * 类

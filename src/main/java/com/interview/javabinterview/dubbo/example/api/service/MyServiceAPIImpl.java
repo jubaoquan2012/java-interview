@@ -1,4 +1,4 @@
-package com.interview.javabinterview.dubbo.api.service;
+package com.interview.javabinterview.dubbo.example.api.service;
 
 /**
  * 类

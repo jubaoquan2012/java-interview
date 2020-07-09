@@ -6,13 +6,13 @@ package com.interview.javabinterview.algorithm.database;
  * @author Ju Baoquan
  * Created at  2020/6/9
  */
-public class Node {
+public class NodeCodeJu {
 
-    private int value;
+    public  int value;
 
-    private Node next;
+    public NodeCodeJu next;
 
-    public Node(int value) {
+    public NodeCodeJu(int value) {
         this.value = value;
     }
 }

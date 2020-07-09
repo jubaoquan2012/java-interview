@@ -1,4 +1,4 @@
-package com.interview.javabinterview.dubbo.anno.service;
+package com.interview.javabinterview.dubbo.example.anno.service;
 
 /**
  * 接口

@@ -1,4 +1,4 @@
-package com.interview.javabinterview.b_highconcurrency.thread;
+package com.interview.javabinterview.highconcurrency.thread;
 
 import java.util.concurrent.*;
 

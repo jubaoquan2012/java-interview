@@ -1,4 +1,4 @@
-package com.interview.javabinterview.design_pattern.pattern_2;
+package com.interview.javabinterview.design_pattern.pattern_3;
 
 /**
  * 既要懒汉式加载，又要线程安全：静态内部类。

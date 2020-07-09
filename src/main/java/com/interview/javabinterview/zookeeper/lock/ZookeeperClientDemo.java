@@ -1,4 +1,4 @@
-package com.interview.javabinterview.zookeeper;
+package com.interview.javabinterview.zookeeper.lock;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;

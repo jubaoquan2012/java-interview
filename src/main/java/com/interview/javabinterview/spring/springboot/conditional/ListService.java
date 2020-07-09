@@ -7,4 +7,6 @@ package com.interview.javabinterview.spring.springboot.conditional;
  * Created at  2020/6/4
  */
 public interface ListService {
+
+    public String showListCmd();
 }

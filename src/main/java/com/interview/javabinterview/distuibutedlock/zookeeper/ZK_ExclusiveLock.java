@@ -1,6 +1,6 @@
-package com.interview.javabinterview.edistuibuted.lock.zookeeper;
+package com.interview.javabinterview.distuibutedlock.zookeeper;
 
-import com.interview.javabinterview.edistuibuted.lock.DistributedLock;
+import com.interview.javabinterview.distuibutedlock.DistributedLock;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 

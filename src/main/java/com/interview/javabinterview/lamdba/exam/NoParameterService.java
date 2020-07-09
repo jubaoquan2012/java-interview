@@ -1,4 +1,4 @@
-package com.interview.javabinterview.lamdba;
+package com.interview.javabinterview.lamdba.exam;
 
 /**
  * 接口
@@ -6,17 +6,7 @@ package com.interview.javabinterview.lamdba;
  * @author Ju Baoquan
  * Created at  2020/5/28
  */
-public interface LamdbaService {
+public interface NoParameterService {
 
-    void noParameter();
-
-    void oneParameter(String a);
-
-    void twoParameter(String a, String b);
-
-    String noParameterWithResult();
-
-    String oneParameterWithResult(String a);
-
-    String twoParameterWithResult(String a, String b);
+    void run();
 }

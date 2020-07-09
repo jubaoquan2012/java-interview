@@ -25,9 +25,10 @@
     </aop:config>
 
     <!--dao实例加入容器-->
-    <bean id="userDao" class="com.interview.javabinterview.spring.aop.UserDao"/>
+    <bean id="userDao" class="com.interview.javabinterview.spring.aop.example.UserDao" />
     <!--dao实例加入容器-->
-    <bean id="orderDao" class="com.interview.javabinterview.spring.aop.OrderDao"/>
+    <bean id="orderDao" class="com.interview.javabinterview.spring.aop.example.OrderDao"/>
     <!--实例化切面类-->
-    <bean id="transactionAop" class="com.interview.javabinterview.spring.aop.TransactionAop"/>
+    <bean id="transactionAop" class="com.interview.javabinterview.spring.aop.example.TransactionAop"/>
+
 </beans>

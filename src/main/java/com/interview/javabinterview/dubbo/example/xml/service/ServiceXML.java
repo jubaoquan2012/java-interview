@@ -6,7 +6,7 @@ package com.interview.javabinterview.dubbo.example.xml.service;
  * @author Ju Baoquan
  * Created at  2020/4/2
  */
-public interface MyServiceXML {
+public interface ServiceXML {
 
     public String print(String name);
 }

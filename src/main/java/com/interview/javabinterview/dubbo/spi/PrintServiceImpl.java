@@ -6,5 +6,10 @@ package com.interview.javabinterview.dubbo.spi;
  * @author Ju Baoquan
  * Created at  2020/6/3
  */
-public class PrintServiceImpl {
+public class PrintServiceImpl implements PrintService{
+
+    @Override
+    public void printInfo() {
+        System.out.println("helloWorld");
+    }
 }

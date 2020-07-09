@@ -6,5 +6,7 @@ package com.interview.javabinterview;
  * @author Ju Baoquan
  * Created at  2020/5/20
  */
-public class BaseCodeJu {
+public interface BaseCodeJu {
+
+    void impl();
 }

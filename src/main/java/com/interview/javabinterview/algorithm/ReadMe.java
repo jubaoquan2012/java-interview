@@ -1,4 +1,4 @@
-package com.interview.javabinterview.a_algorithm;
+package com.interview.javabinterview.algorithm;
 
 /**
  * 算法导读
@@ -21,7 +21,7 @@ public class ReadMe {
 
     /**{@link Algorithm_7} 扑克牌游戏:*/
 
-    /**{@link Algorithm_8} 数组去重:*/
+    /**{@link Algorithm_8} 有序数组去重/数组删除元素*/
 
     /**{@link Algorithm_9} 字符串操作:*/
 
@@ -32,5 +32,19 @@ public class ReadMe {
     /**{@link Algorithm_12} 判断一个整数是否是奇数:*/
 
     /**{@link Algorithm_13} lru算法, 最近最少使用:*/
+
+    /**{@link Algorithm_16} 找出数组中重复的元素:*/
+
+    /**{@link Algorithm_17} 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。*/
+
+    /**{@link Algorithm_18} 给定一个数, (各位的乘积 - 各位的和)的结果*/
+
+    /**{@link Algorithm_19} 回文数*/
+
+    /**{@link Algorithm_20} 数组三数之和/两数之和/两数差最大*/
+
+    /**{@link Algorithm_21} 链表反转(包含局部反转)、合并(两个多个)、删除、*/
+
+
 }
 

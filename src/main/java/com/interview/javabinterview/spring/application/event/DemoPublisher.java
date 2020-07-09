@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.applicationevent;
+package com.interview.javabinterview.spring.application.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

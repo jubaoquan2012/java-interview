@@ -1,6 +1,6 @@
-package com.interview.javabinterview.b_highconcurrency.juc.demo;
+package com.interview.javabinterview.highconcurrency.juc.demo;
 
-import com.interview.javabinterview.b_highconcurrency.juc.impl.CyclicBarrier;
+import com.interview.javabinterview.highconcurrency.juc.impl.CyclicBarrier;
 
 /**
  * 类

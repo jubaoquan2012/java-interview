@@ -14,26 +14,28 @@ package com.interview.javabinterview.algorithm;
 public class Algorithm_16 {
 
     public static void main(String[] args) {
-        int[] array = {2, 3, 0, 0, 0};
+        int[] array = {1, 3, 3, 2};
 
-        System.out.println(getFirstRepeat_1(array));
+        System.out.println(findDuplicate(array));
 
-        System.out.println(getFirstRepeat_2(array));
+        //System.out.println(getFirstRepeat_2(array));
     }
 
-    private static int getFirstRepeat_1(int[] array) {
-        if (array == null || array.length == 0) {
+    public static int findDuplicate(int[] nums) {
+        if (nums == null || nums.length == 0) {
             return -1;
         }
-        int[] newArray = new int[array.length];
-
-        for (int i = 0; i < array.length; i++) {
-            if (++newArray[array[i]] > 1) {
-                return array[i];
+        int[] newNums = new int[nums.length];
+        for (int num : nums) {
+            if (newNums[num] == 1) {
+                return num;
+            } else {
+                newNums[num] = 1;
             }
         }
         return -1;
     }
+
 
     private static int getFirstRepeat_2(int[] array) {
         if (array == null || array.length == 0) {

@@ -1,6 +1,6 @@
-package com.interview.javabinterview.b_highconcurrency;
+package com.interview.javabinterview.highconcurrency;
 
-import com.interview.javabinterview.b_highconcurrency.juc.impl.ReentrantReadWriteLock;
+import com.interview.javabinterview.highconcurrency.juc.impl.ReentrantReadWriteLock;
 
 /**
  * 类

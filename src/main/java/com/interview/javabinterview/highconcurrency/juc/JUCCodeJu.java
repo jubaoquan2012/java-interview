@@ -1,6 +1,6 @@
-package com.interview.javabinterview.b_highconcurrency.juc;
+package com.interview.javabinterview.highconcurrency.juc;
 
-import com.interview.javabinterview.b_highconcurrency.juc.impl.*;
+import com.interview.javabinterview.highconcurrency.juc.impl.*;
 
 /**
  * 类

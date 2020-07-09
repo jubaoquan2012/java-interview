@@ -1,4 +1,4 @@
-package com.interview.javabinterview.b_highconcurrency.deadlock;
+package com.interview.javabinterview.highconcurrency.deadlock;
 
 /**
  * 死锁:

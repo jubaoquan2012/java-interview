@@ -1,10 +1,10 @@
 package com.interview.javabinterview.spring.springboot;
 
 /**
- * 类
+ * spring boot 新特性
  *
  * @author Ju Baoquan
  * Created at  2020/6/4
  */
-public class Main {
+public class ReadMe {
 }

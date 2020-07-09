@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.ioc.anno;
+package com.interview.javabinterview.spring.reflect.target;
 
 /**
  * 类
@@ -6,9 +6,9 @@ package com.interview.javabinterview.spring.ioc.anno;
  * @author Ju Baoquan
  * Created at  2020/5/22
  */
-@MyAnnotation
-public interface CodeJu {
+public interface Car {
 
-    @MyMethodAnnotation
-    void msg();
+    String brand();
+
+    void run(int speed);
 }

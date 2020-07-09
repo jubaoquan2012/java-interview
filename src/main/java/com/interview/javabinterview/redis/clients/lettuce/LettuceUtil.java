@@ -1,7 +1,7 @@
 package com.interview.javabinterview.redis.clients.lettuce;
 
 /**
- * 类
+ * https://www.cnblogs.com/throwable/p/11601538.html
  *
  * @author Ju Baoquan
  * Created at  2020/5/22

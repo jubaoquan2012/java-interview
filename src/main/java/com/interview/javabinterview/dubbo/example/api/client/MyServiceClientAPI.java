@@ -1,6 +1,6 @@
-package com.interview.javabinterview.dubbo.api.client;
+package com.interview.javabinterview.dubbo.example.api.client;
 
-import com.interview.javabinterview.dubbo.api.service.MyServiceAPI;
+import com.interview.javabinterview.dubbo.example.api.service.MyServiceAPI;
 import jdk.nashorn.internal.ir.annotations.Reference;
 import org.springframework.stereotype.Component;
 

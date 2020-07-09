@@ -9,10 +9,8 @@ import com.alibaba.dubbo.config.annotation.Service;
  * Created at  2020/5/25
  */
 @Service
-public class DemoAnnotationService {
+public class DemoMethodService {
 
-    @Action(name = "注解式拦截的add操作")
     public void add() {
-
     }
 }

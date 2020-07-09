@@ -1,4 +1,4 @@
-package com.interview.javabinterview.edistuibuted.lock.zookeeper;
+package com.interview.javabinterview.distuibutedlock.zookeeper;
 
 /**
  * 类

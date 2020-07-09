@@ -6,7 +6,7 @@ package com.interview.javabinterview.dubbo.example.xml.service;
  * @author Ju Baoquan
  * Created at  2020/4/2
  */
-public class MyServiceXMLImpl implements MyServiceXML {
+public class ServiceXMLImpl implements ServiceXML {
 
     @Override
     public String print(String name) {

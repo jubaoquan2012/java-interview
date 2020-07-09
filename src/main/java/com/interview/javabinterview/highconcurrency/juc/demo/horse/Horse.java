@@ -1,4 +1,4 @@
-package com.interview.javabinterview.b_highconcurrency.juc.demo.horse;
+package com.interview.javabinterview.highconcurrency.juc.demo.horse;
 
 import java.util.Random;
 import java.util.concurrent.CyclicBarrier;

@@ -1,4 +1,4 @@
-package com.interview.javabinterview.b_highconcurrency.juc.impl;
+package com.interview.javabinterview.highconcurrency.juc.impl;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;

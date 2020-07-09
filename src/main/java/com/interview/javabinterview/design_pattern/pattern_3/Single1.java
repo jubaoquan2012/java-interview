@@ -1,4 +1,4 @@
-package com.interview.javabinterview.design_pattern.pattern_2;
+package com.interview.javabinterview.design_pattern.pattern_3;
 
 /**
  * 懒汉式加载

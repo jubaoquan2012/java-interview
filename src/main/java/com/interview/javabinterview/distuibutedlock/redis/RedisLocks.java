@@ -1,4 +1,4 @@
-package com.interview.javabinterview.edistuibuted.lock.redis;
+package com.interview.javabinterview.distuibutedlock.redis;
 
 import java.util.UUID;
 

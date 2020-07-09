@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.threadpool.impl;
+package com.interview.javabinterview.spring.springboot.threadpool.impl;
 
 public interface RejectedExecutionHandler {
 

@@ -6,5 +6,5 @@ package com.interview.javabinterview.redis.clients;
  * @author Ju Baoquan
  * Created at  2020/5/21
  */
-public class RedisClient {
+public interface RedisClientUtil {
 }

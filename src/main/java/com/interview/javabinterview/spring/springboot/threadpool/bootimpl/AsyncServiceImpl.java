@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.threadpool.bootimpl;
+package com.interview.javabinterview.spring.springboot.threadpool.bootimpl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import org.springframework.scheduling.annotation.Async;

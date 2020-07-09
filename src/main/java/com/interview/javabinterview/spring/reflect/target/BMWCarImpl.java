@@ -7,10 +7,10 @@ package com.interview.javabinterview.spring.reflect.target;
  * Created at  2020/5/22
  */
 @CarAnnotation
-public class CarImpl implements Car {
+public class BMWCarImpl extends CarAbstract {
 
     @Override
-    public void msg() {
-        System.out.println("我的第一个注解实现类");
+    public String brand() {
+        return "此车是宝马";
     }
 }

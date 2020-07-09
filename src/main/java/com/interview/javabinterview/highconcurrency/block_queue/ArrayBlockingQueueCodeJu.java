@@ -1,4 +1,4 @@
-package com.interview.javabinterview.b_highconcurrency.block_queue;
+package com.interview.javabinterview.highconcurrency.block_queue;
 
 
 import java.util.concurrent.ArrayBlockingQueue;

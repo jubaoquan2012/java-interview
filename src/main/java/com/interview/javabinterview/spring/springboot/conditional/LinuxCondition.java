@@ -10,15 +10,10 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * @author Ju Baoquan
  * Created at  2020/6/4
  */
-public class WindowConditionServiceImpl implements ConditionService, Condition {
-
-    @Override
-    public void print() {
-        System.out.println("在Window上执行");
-    }
+public class LinuxCondition implements  Condition {
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        return context.getEnvironment().getProperty("os.name").contains("Windows");
+        return context.getEnvironment().getProperty("os.name").contains("Linux");
     }
 }

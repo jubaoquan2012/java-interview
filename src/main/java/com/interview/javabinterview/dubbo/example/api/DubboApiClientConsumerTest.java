@@ -1,10 +1,10 @@
-package com.interview.javabinterview.dubbo.example.api.client.consumer;
+package com.interview.javabinterview.dubbo.example.api;
 
 import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.ReferenceConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
 import com.interview.javabinterview.dubbo.example.api.service.MyServiceAPI;
-import com.interview.javabinterview.dubbo.example.xml.service.MyServiceXML;
+import com.interview.javabinterview.dubbo.example.xml.service.ServiceXML;
 
 /**
  * 类
@@ -12,7 +12,7 @@ import com.interview.javabinterview.dubbo.example.xml.service.MyServiceXML;
  * @author Ju Baoquan
  * Created at  2020/4/13
  */
-public class ClientConsumer {
+public class DubboApiClientConsumerTest {
 
     public static void main(String[] args) {
         ReferenceConfig<MyServiceAPI> reference = new ReferenceConfig<>();
@@ -20,7 +20,7 @@ public class ClientConsumer {
         //创建注册中心,并制定Zookeeper协议、ip和端口号
         reference.setRegistry(new RegistryConfig("zookeeper://127.0.0.1:2181"));
         //指定要消费的服务接口
-        reference.setInterface(MyServiceXML.class);
+        reference.setInterface(ServiceXML.class);
         //创建远程连接并做动态代理装换
         MyServiceAPI serviceAPI = reference.get();
         serviceAPI.print("jubaoquan");

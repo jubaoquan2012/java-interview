@@ -1,6 +1,6 @@
-package com.interview.javabinterview.a_algorithm;
+package com.interview.javabinterview.algorithm;
 
-import com.interview.javabinterview.c_data_structure.LinkedList;
+import com.interview.javabinterview.data_structure.LinkedList;
 
 /**
  * 计数器

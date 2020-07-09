@@ -1,8 +1,4 @@
-package com.zhaopin.userbehaviorservice.utils;
-
-/**
- * Created by zhao.li on 2017/10/27.
- */
+package com.interview.javabinterview.spring.reflect;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -15,7 +11,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
 /**
  * 类相关的工具类
  *

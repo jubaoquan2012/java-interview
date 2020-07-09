@@ -1,4 +1,4 @@
-package com.interview.javabinterview.io.bio;
+package com.interview.javabinterview.io.nio;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,7 +11,7 @@ import java.util.UUID;
  * @author Ju Baoquan
  * Created at  2020/6/8
  */
-public class BIOClient {
+public class NIOClient {
 
     public static void main(String[] args) throws IOException {
 

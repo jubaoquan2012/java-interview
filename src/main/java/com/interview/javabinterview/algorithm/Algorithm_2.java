@@ -1,4 +1,4 @@
-package com.interview.javabinterview.a_algorithm;
+package com.interview.javabinterview.algorithm;
 
 /**
  * 二分查找

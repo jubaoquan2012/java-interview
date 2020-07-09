@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.threadpool.bootimpl.executorimpl;
+package com.interview.javabinterview.spring.springboot.threadpool.bootimpl.executorimpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.interview.javabinterview.b_highconcurrency.juc.impl;
+package com.interview.javabinterview.highconcurrency.juc.impl;
 
 public abstract class AbstractOwnableSynchronizer implements java.io.Serializable {
 

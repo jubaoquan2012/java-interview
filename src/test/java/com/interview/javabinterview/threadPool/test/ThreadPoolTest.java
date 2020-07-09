@@ -105,10 +105,10 @@ public class ThreadPoolTest {
 
     public static void main(String[] args) {
         ThreadPoolTest test = new ThreadPoolTest();
-        //test.abortPolicyTest();
+        //test.txt.abortPolicyTest();
         test.discardPolicyTest();
-        //test.discardOldestPolicyTest();
-        //test.CallerRunsPolicyTest();
+        //test.txt.discardOldestPolicyTest();
+        //test.txt.CallerRunsPolicyTest();
     }
 
     /**

@@ -19,6 +19,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * 4.销毁     Destruction
  *
  * 参考:https://www.jianshu.com/p/1dec08d290c1
+ *spring 生命周期最详解: https://blog.csdn.net/qq_23473123/article/details/76610052
  * @author Ju Baoquan
  * Created at  2020/5/21
  */

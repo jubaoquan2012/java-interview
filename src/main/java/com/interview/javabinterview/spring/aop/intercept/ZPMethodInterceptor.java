@@ -6,7 +6,7 @@ package com.interview.javabinterview.spring.aop.intercept;
  * @author Ju Baoquan
  * Created at  2020/5/25
  */
-public interface ZPMethodIntercept {
+public interface ZPMethodInterceptor {
 
     Object invoke(ZPMethodInvocation invocation) throws Throwable;
 }

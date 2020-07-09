@@ -1,4 +1,4 @@
-package com.interview.javabinterview.b_highconcurrency.thread.demo;
+package com.interview.javabinterview.highconcurrency.thread.demo;
 
 /**
  * run方法无阻塞

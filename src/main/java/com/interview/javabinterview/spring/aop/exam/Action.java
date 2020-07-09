@@ -7,4 +7,6 @@ package com.interview.javabinterview.spring.aop.exam;
  * Created at  2020/6/4
  */
 public @interface Action {
+
+    String name() default "";
 }

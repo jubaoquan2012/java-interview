@@ -1,4 +1,4 @@
-package com.interview.javabinterview.b_highconcurrency.juc.demo;
+package com.interview.javabinterview.highconcurrency.juc.demo;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;

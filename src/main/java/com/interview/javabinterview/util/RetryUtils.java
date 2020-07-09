@@ -1,9 +1,4 @@
-package com.zhaopin.microservice.resumeextend.util;
-
-import com.zhaopin.common.exception.LogLevel;
-import com.zhaopin.common.exception.ServiceException;
-import com.zhaopin.common3.constant.ErrorCode;
-import org.apache.poi.ss.formula.functions.T;
+package com.interview.javabinterview.util;
 
 /**
  * 重试工具类
@@ -36,11 +31,11 @@ public class RetryUtils {
             try {
                 supplier.get();
                 return;
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 exception = e;
             }
         }
-        throw new ServiceException(exception, exception.getMessage(), Long.toString(ErrorCode.SERVER_ERROR), null, LogLevel.ERROR);
+        throw new RuntimeException("exception");
     }
 
     /**
@@ -48,6 +43,10 @@ public class RetryUtils {
      */
     @FunctionalInterface
     public interface Supplier {
-        void get() throws ServiceException;
+        void get() throws RuntimeException;
+    }
+
+    public static void main(String[] args) {
+
     }
 }

@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.ioc;
+package com.interview.javabinterview.spring.ioc.xml;
 
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;

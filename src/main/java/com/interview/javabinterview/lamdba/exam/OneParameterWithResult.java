@@ -6,5 +6,7 @@ package com.interview.javabinterview.lamdba.exam;
  * @author Ju Baoquan
  * Created at  2020/5/28
  */
-public class OneParameterWithResult {
+public interface OneParameterWithResult {
+
+    String run(String parameter);
 }

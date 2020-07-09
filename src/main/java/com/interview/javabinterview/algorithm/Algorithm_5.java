@@ -1,4 +1,4 @@
-package com.interview.javabinterview.a_algorithm;
+package com.interview.javabinterview.algorithm;
 
 /**
  * 输入一个数,重新排列组合,输出下一个大的数
@@ -39,7 +39,7 @@ public class Algorithm_5 {
             array[i] = temp;
         }
         /**step3.index(4)后面的数字反转*/
-        Algorithm_Util.reverseArray(array, i + 1);
+        AlgorithmUtils.reverseArray(array, i + 1);
         return array;
     }
 

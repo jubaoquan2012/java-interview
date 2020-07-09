@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.threadpool.impl;
+package com.interview.javabinterview.spring.springboot.threadpool.impl;
 
 import java.security.AccessControlContext;
 import java.security.AccessController;

@@ -22,7 +22,6 @@ public class FunctionInterface {
 
     @FunctionalInterface
     interface Converter<F, T> {
-
         T convert(F from);
     }
 }

@@ -1,9 +1,9 @@
-package com.interview.javabinterview.b_highconcurrency.juc;
+package com.interview.javabinterview.highconcurrency.juc;
 
-import com.interview.javabinterview.b_highconcurrency.juc.impl.CountDownLatch;
-import com.interview.javabinterview.b_highconcurrency.juc.impl.CyclicBarrier;
-import com.interview.javabinterview.b_highconcurrency.juc.impl.ReentrantLock;
-import com.interview.javabinterview.b_highconcurrency.juc.impl.ReentrantReadWriteLock;
+import com.interview.javabinterview.highconcurrency.juc.impl.CountDownLatch;
+import com.interview.javabinterview.highconcurrency.juc.impl.CyclicBarrier;
+import com.interview.javabinterview.highconcurrency.juc.impl.ReentrantLock;
+import com.interview.javabinterview.highconcurrency.juc.impl.ReentrantReadWriteLock;
 
 import java.util.concurrent.Semaphore;
 

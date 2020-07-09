@@ -6,15 +6,20 @@ package com.interview.javabinterview.algorithm.database;
  * @author Ju Baoquan
  * Created at  2020/6/9
  */
-public class DoubleNode {
+public class DoubleNodeCodeJu {
 
-    int value;
+    public int value;
 
-    DoubleNode pre;
+    public DoubleNodeCodeJu pre;
 
-    DoubleNode next;
+    public DoubleNodeCodeJu next;
 
-    public DoubleNode(int value) {
+    public DoubleNodeCodeJu(int value) {
+        this.value = value;
+    }
+
+    public DoubleNodeCodeJu(DoubleNodeCodeJu pre, int value) {
+        this.pre = pre;
         this.value = value;
     }
 }

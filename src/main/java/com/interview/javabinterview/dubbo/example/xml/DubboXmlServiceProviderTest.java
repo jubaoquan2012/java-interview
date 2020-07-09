@@ -10,7 +10,7 @@ import java.io.IOException;
  * @author Ju Baoquan
  * Created at  2020/4/13
  */
-public class ServiceTest {
+public class DubboXmlServiceProviderTest {
 
     /**
      *

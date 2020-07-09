@@ -1,4 +1,4 @@
-package com.interview.javabinterview.dubbo.anno.service;
+package com.interview.javabinterview.dubbo.example.anno.service;
 
 /**
  * 类
@@ -9,7 +9,7 @@ package com.interview.javabinterview.dubbo.anno.service;
 
 import com.alibaba.dubbo.config.annotation.Service;
 
-@Service
+@Service(loadbalance = "random", timeout = 5000,weight = 3, cluster = "failsafe")
 public class MyServiceANNOImpl implements MyServiceANNO {
 
     @Override

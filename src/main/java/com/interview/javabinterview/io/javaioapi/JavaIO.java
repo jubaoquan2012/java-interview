@@ -1,7 +1,6 @@
-package com.interview.javabinterview.java_base.io;
+package com.interview.javabinterview.io.javaioapi;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * 类
@@ -11,9 +10,11 @@ import java.io.IOException;
  */
 public class JavaIO {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         JavaIO javaIO = new JavaIO();
-        javaIO.method_1();
+        javaIO.method_1();// file 操作
+        javaIO.method_2();// 字节流
+        javaIO.method_3();// 缓冲流
     }
 
     private void method_1() throws IOException {
@@ -60,5 +61,74 @@ public class JavaIO {
         String[] names = efgDir.list();
 
         File[] files = efgDir.listFiles();
+    }
+
+    /**
+     * 字节输入流: InputStream 抽象类
+     * FileInputStream 操作文件的字节输入流
+     * 字节输出流: OutputStream 抽象类
+     * FileOutputStream 操作文件的字节输出流
+     * <p>
+     * 按照传输方式: 分为字符流和字节流
+     */
+    private void method_2() throws Exception {
+        File file = new File("D:\\temp\\hello.text");
+
+        /**将数据写入到文件中*/
+        FileOutputStream fos1 = new FileOutputStream(file);
+        byte[] data1 = "abcd".getBytes();
+        fos1.write(data1);
+        fos1.close();
+
+        /**文件续写或换行*/
+        FileOutputStream fos2 = new FileOutputStream(file, true);
+        String data2 = "\r\n" + "jubaoquan";
+        fos2.write(data2.getBytes());
+        fos2.close();
+
+        /**从文件中读取数据*/
+        FileInputStream fis1 = new FileInputStream(file);
+        int ch = 0;
+        //read读取数据(一次读取一个字节)
+        while ((ch = fis1.read()) != -1) {
+            System.out.println("ch=" + (char) ch);
+        }
+
+        // read(byte) 一次读取定义的byte的长度
+        int len = 0;
+        byte[] buf = new byte[1024];
+        while ((len = fis1.read(buf)) != -1) {
+            System.out.println(new String(buf, 0, len));
+        }
+        fis1.close();
+    }
+
+    /**
+     * 字节缓冲流
+     * 写入缓冲流 BufferedOutputStream
+     * 读取缓冲流 BufferedInputStream
+     *
+     * @throws Exception
+     */
+    private void method_3() throws Exception {
+        /**写数据到文件中*/
+        FileOutputStream fos = new FileOutputStream("D:\\temp\\hello.text");    //创建基本的字节输出流
+        BufferedOutputStream out = new BufferedOutputStream(fos);                  //使用高效的流,把基本的流进行封装,实现速度的提升
+        out.write("hello jubaoquan".getBytes());
+        out.close();
+
+        /**从文件中读取数据*/
+        FileInputStream fis = new FileInputStream("D:\\temp\\hello.text");
+        BufferedInputStream in = new BufferedInputStream(fis);
+        int len = 0;
+        while ((len = in.read()) != -1) {
+            System.out.println((char) len);
+        }
+        in.close();
+        fis.close();
+
+        /***/
+        /***/
+
     }
 }

@@ -6,12 +6,10 @@ package com.interview.javabinterview.spring.reflect.target;
  * @author Ju Baoquan
  * Created at  2020/5/22
  */
-@CarAnnotation(version = "2008款", price = 28000, color = {"黑", "白"})
-public class BenzCarImpl implements Car {
+public abstract class CarAbstract implements Car {
 
-    @Override
-    public String brand() {
-        return "此车是奔驰";
+    public void stop() {
+        System.out.println("都会自动停车");
     }
 
     @Override

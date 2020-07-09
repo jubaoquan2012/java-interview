@@ -6,5 +6,7 @@ package com.interview.javabinterview.spring.springboot.conditional;
  * @author Ju Baoquan
  * Created at  2020/6/4
  */
-public class COnditonService {
+public interface ConditionService {
+
+    void print();
 }

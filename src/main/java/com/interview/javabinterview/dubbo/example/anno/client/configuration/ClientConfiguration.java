@@ -1,4 +1,4 @@
-package com.interview.javabinterview.dubbo.anno.client.configuration;
+package com.interview.javabinterview.dubbo.example.anno.client.configuration;
 
 import com.alibaba.dubbo.config.*;
 import com.alibaba.dubbo.config.spring.context.annotation.EnableDubbo;
@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
  * Created at  2020/4/13
  */
 @Configuration
-@EnableDubbo(scanBasePackages = "com.interview.javabinterview.dubbo.anno")
-@ComponentScan(value = {"com.interview.javabinterview.dubbo.anno"})
+@EnableDubbo(scanBasePackages = "com.interview.javabinterview.dubbo.example.anno")
+@ComponentScan(value = {"com.interview.javabinterview.dubbo.example.anno"})
 public class ClientConfiguration {
 
     @Bean

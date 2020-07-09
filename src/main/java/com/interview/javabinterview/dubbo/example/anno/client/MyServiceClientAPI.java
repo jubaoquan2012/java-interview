@@ -1,7 +1,7 @@
-package com.interview.javabinterview.dubbo.anno.client;
+package com.interview.javabinterview.dubbo.example.anno.client;
 
-import com.interview.javabinterview.dubbo.anno.service.MyServiceANNO;
-import jdk.nashorn.internal.ir.annotations.Reference;
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.interview.javabinterview.dubbo.example.anno.service.MyServiceANNO;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyServiceClientAPI {
 
-    @Reference
+    @Reference(loadbalance = "roundrobin", timeout = 1, cluster = "failsafe", mock = "com.interview.javabinterview.dubbo.example.anno.client.mock.MyServiceANNOMock")
     private MyServiceANNO service;
 
     public String print(String name){

@@ -1,4 +1,4 @@
-package com.interview.javabinterview.b_highconcurrency.threadlocal;
+package com.interview.javabinterview.highconcurrency.threadlocal;
 
 /**
  * 类

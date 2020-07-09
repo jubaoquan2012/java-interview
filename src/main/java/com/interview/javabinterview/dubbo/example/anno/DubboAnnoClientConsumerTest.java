@@ -10,7 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * @author Ju Baoquan
  * Created at  2020/4/13
  */
-public class ClientTest {
+public class DubboAnnoClientConsumerTest {
 
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ClientConfiguration.class);

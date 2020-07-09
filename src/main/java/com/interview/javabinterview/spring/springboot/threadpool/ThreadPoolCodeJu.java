@@ -1,6 +1,6 @@
-package com.interview.javabinterview.spring.threadpool;
+package com.interview.javabinterview.spring.springboot.threadpool;
 
-import com.interview.javabinterview.spring.threadpool.impl.ThreadPoolExecutor;
+import com.interview.javabinterview.spring.springboot.threadpool.impl.ThreadPoolExecutor;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.util.concurrent.LinkedBlockingQueue;

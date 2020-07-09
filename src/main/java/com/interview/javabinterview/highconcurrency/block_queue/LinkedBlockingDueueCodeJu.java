@@ -1,7 +1,6 @@
-package com.interview.javabinterview.b_highconcurrency.block_queue;
+package com.interview.javabinterview.highconcurrency.block_queue;
 
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**

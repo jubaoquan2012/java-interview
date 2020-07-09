@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.applicationevent;
+package com.interview.javabinterview.spring.application.event;
 
 import org.springframework.context.ApplicationEvent;
 

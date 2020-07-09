@@ -1,9 +1,9 @@
-package com.interview.javabinterview.edistuibuted.lock;
+package com.interview.javabinterview.distuibutedlock;
 
+import com.interview.javabinterview.distuibutedlock.zookeeper.ZK_ExclusiveLock;
 import org.apache.zookeeper.KeeperException;
 
 import java.io.IOException;
-import com.interview.javabinterview.edistuibuted.lock.zookeeper.ZK_ExclusiveLock;
 
 /**
  * 类

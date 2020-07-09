@@ -10,12 +10,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * @author Ju Baoquan
  * Created at  2020/6/4
  */
-public class WindowConditionServiceImpl implements ConditionService, Condition {
-
-    @Override
-    public void print() {
-        System.out.println("在Window上执行");
-    }
+public class WindowCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {

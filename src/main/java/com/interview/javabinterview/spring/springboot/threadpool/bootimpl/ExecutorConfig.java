@@ -1,6 +1,6 @@
-package com.interview.javabinterview.spring.threadpool.bootimpl;
+package com.interview.javabinterview.spring.springboot.threadpool.bootimpl;
 
-import com.interview.javabinterview.spring.threadpool.bootimpl.executorimpl.CodeJuThreadPoolTaskExecutor;
+import com.interview.javabinterview.spring.springboot.threadpool.bootimpl.executorimpl.CodeJuThreadPoolTaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,9 +1,8 @@
-package com.interview.javabinterview.b_highconcurrency;
+package com.interview.javabinterview.highconcurrency;
 
-import com.interview.javabinterview.b_highconcurrency.block_queue.*;
-import com.interview.javabinterview.b_highconcurrency.juc.JUCCodeJu;
-import com.interview.javabinterview.b_highconcurrency.threadlocal.ThreadLocalCodeJu;
-import com.interview.javabinterview.b_highconcurrency.threadpool.ThreadPoolCodeJu;
+import com.interview.javabinterview.highconcurrency.block_queue.BlockingQueueCodeJu;
+import com.interview.javabinterview.highconcurrency.juc.JUCCodeJu;
+import com.interview.javabinterview.highconcurrency.threadlocal.ThreadLocalCodeJu;
 
 /**
  * 阻塞队列学习

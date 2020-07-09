@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.ioc.anno;
+package com.interview.javabinterview.spring.reflect.target;
 
 import java.lang.annotation.*;
 
@@ -26,10 +26,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface MyAnnotation {
+public @interface CarAnnotation {
 
-    String msg() default "this is myAnnotation";//default默认值
+    String version() default "默认 2000年款";//default默认值
 
-    int code() default 0;
+    int price() default 20000;
 
+    String[] color() default {"红", "黄", "蓝"};
 }

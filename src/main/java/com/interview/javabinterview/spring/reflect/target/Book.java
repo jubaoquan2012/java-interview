@@ -1,4 +1,4 @@
-package com.interview.javabinterview.spring.reflect;
+package com.interview.javabinterview.spring.reflect.target;
 
 /**
  * 类

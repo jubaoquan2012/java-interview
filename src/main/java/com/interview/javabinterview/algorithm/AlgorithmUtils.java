@@ -1,5 +1,7 @@
-package com.interview.javabinterview.a_algorithm;
+package com.interview.javabinterview.algorithm;
 
+import com.interview.javabinterview.algorithm.database.DoubleNodeCodeJu;
+import com.interview.javabinterview.algorithm.database.NodeCodeJu;
 import com.interview.javabinterview.java_base.map.ArrayList;
 
 import java.util.List;
@@ -11,6 +13,48 @@ import java.util.List;
  * Created at  2020/4/7
  */
 public class AlgorithmUtils {
+
+    public static DoubleNodeCodeJu arrayToDoubleNode(int[] array) {
+        if (array.length == 0) {
+            return null;
+        }
+        DoubleNodeCodeJu node = new DoubleNodeCodeJu(0);
+        DoubleNodeCodeJu temp = node;
+        for (int value : array) {
+            temp.next = new DoubleNodeCodeJu(temp,value);
+            temp = temp.next;
+        }
+        return node.next;
+    }
+
+    /**
+     * 数组转换为链表
+     */
+    public static NodeCodeJu arrayToNode(int[] array) {
+        if (array.length == 0) {
+            return null;
+        }
+        NodeCodeJu node = new NodeCodeJu(0);
+        NodeCodeJu temp = node;
+        for (int value : array) {
+            temp.next = new NodeCodeJu(value);
+            temp = temp.next;
+        }
+        return node.next;
+    }
+
+    public static void printNode(NodeCodeJu node) {
+        StringBuilder sb = new StringBuilder("节点输出:[");
+        while (node != null) {
+            sb.append(node.value);
+            node = node.next;
+            if (node != null) {
+                sb.append(",");
+            }
+        }
+        sb.append("]");
+        System.out.println(sb.toString());
+    }
 
     public static void print(int[] array) {
         StringBuilder sb = new StringBuilder();

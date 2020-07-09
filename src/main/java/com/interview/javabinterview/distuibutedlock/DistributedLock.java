@@ -1,4 +1,4 @@
-package com.interview.javabinterview.edistuibuted.lock;
+package com.interview.javabinterview.distuibutedlock;
 
 import org.apache.zookeeper.KeeperException;
 
