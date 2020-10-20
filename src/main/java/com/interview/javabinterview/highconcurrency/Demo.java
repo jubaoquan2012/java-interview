@@ -2,6 +2,8 @@ package com.interview.javabinterview.highconcurrency;
 
 import com.interview.javabinterview.highconcurrency.juc.impl.ReentrantReadWriteLock;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 类
  *
@@ -14,8 +16,7 @@ public class Demo {
         System.out.println(121195181 /100%40);
         ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
         lock.readLock().lock();
-
-
         lock.writeLock().lock();
+        ConcurrentHashMap<Object, Object> hashMap = new ConcurrentHashMap<>();
     }
 }
