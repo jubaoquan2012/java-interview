@@ -71,9 +71,7 @@ public class ConsumerRateLimiter {
         if (this.renewTask == null) {
             this.renewTask = this.createTask();
         }
-
         boolean canAcquire = false;
-
         do {
             canAcquire = acquirePermit < 0L || this.acquiredPermits < this.permits;
             if (!canAcquire) {
