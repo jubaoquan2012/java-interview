@@ -2,6 +2,9 @@ package com.interview.javabinterview.algorithm;
 
 import com.alibaba.fastjson.JSON;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 类
  *
@@ -11,8 +14,8 @@ import com.alibaba.fastjson.JSON;
 public class Algorithm_ {
 
     public static void main(String[] args) {
+        Map<Object,Object> hashMap = new HashMap<>();
         int[] array = {26, 45, 59, 14, 18, 21, 17, 18};
-
         //bubbleSort(array);
         quickSort(array, 0, array.length - 1);
         System.out.println(JSON.toJSONString(array));

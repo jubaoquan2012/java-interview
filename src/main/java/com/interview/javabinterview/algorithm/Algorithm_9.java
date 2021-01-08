@@ -1,6 +1,9 @@
 package com.interview.javabinterview.algorithm;
 
+import lombok.Synchronized;
+
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 字符串操作
@@ -11,7 +14,7 @@ import java.util.Stack;
 public class Algorithm_9 {
 
     public static void main(String[] args) {
-
+        Object o =  new Object();
         String str = "{()[]}";
         boolean validString = isValidString(str);
         System.out.println(validString);
