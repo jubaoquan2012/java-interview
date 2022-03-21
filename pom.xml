@@ -136,7 +136,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>dubbo</artifactId>
-            <version>2.6.0</version>
+            <version>2.6.9</version>
         </dependency>
 
         <!--javassit:在JAVA应用程序运行时，按照要求动态生成class并且完成实例化-->
